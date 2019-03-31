@@ -26,29 +26,29 @@ b) the information of whether the trump was declared in the first or second is i
 #### Count
 - possible # trump suits: 1 (see notes)
 - **Case 1: Trump declared in first round**
-- possible # upcards: 6
-- **Case 1.1: Player is not the dealer**
-- possible # seats: 3
-- possible # trump declarers: 4
-- possible # hand combinations: 17,633
-- **Case 1.2: Player is the dealer**
-- possible # seats: 1
-- **Case 1.2.1: Player declared trump**
-- possible # trump declarers: 1
-- possible # hands: 17,633
-- possible # discarded cards: 19
-- **Case 1.2.2: Player did not declare trump**
-- possible # trump declarers: 3
-- possible # hands: 17,633
+    - possible # upcards: 6
+    - **Case 1.1: Player is not the dealer**
+        - possible # seats: 3
+        - possible # trump declarers: 4
+        - possible # hand combinations: 17,633
+    - **Case 1.2: Player is the dealer**
+        - possible # seats: 1
+        - **Case 1.2.1: Player declared trump**
+            - possible # trump declarers: 1
+            - possible # hands: 17,633
+            - possible # discarded cards: 19
+        - **Case 1.2.2: Player did not declare trump**
+            - possible # trump declarers: 3
+            - possible # hands: 17,633
 - **Case 2: Trump declared in second round**
-- possible # seats: 4
-- possible # trump declarers: 4
-- **Case 2.1: Upcard was member of Next suit**
-- possible # upcards: 6
-- possible # hands: 17,633
-- **Case 2.1: Upcard was member of Green suit**
-- possible # upcards: 6
-- possible # hands: 33,649
+    - possible # seats: 4
+    - possible # trump declarers: 4
+    - **Case 2.1: Upcard was member of Next suit**
+        - possible # upcards: 6
+        - possible # hands: 17,633
+    - **Case 2.1: Upcard was member of Green suit**
+        - possible # upcards: 6
+        - possible # hands: 33,649
 
 Which results in a total of **8,502,204**
 
@@ -57,3 +57,4 @@ Which results in a total of **8,502,204**
 - This count includes some Hand Scenarios which are theoretically possible but would never be found in a practical game of Euchre, either because your hand is too strong or too weak to justify the trump declaration result. These types of hands will not be seen by the engine because they'll be filtered out by my trump declaration algorithm.
 - 33,649 is the number of possible hands made up of all cards not including the upcard, where the two Green suits are distinguishable. (23 choose 5)
 - 17,633 is the number of possible hands made up of all cards not including the upcard, where the two Green suits are non-distinguishable.
+- In the implementation of my euchre engine, non-trump Jacks, Tens, and Nines are treated as identical cards. This reduces the effective number of unique Hand Scenarios. Since the specific rank of these cards very rarely affect the outcome of a trick, it is a wothwhile simplification to allow the engine to learn faster by focusing on more important details in the hands.
