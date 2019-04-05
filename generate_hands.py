@@ -6,16 +6,16 @@ Created on Sat Mar 30 18:06:42 2019
 @author: ethangreig
 """
 
-from constants import next_dict, value_dict, trump_value_dict
-from constants import deck, h_deck, d_deck, s_deck, c_deck
-from constants import trump_pts, ace_pts, king_pts
-from constants import topcard_bonus, topcard_penalty
-from constants import next_seat_bonus, green_seat_bonus, seat_bonus_factor
+from constants import NEXT_DICT, VALUE_DICT, TRUMP_VALUE_DICT
+from constants import DECK, H_DECK, D_DECK, S_DECK, C_DECK
+from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS
+from constants import TOPCARD_BONUS, TOPCARD_PENALTY
+from constants import NEXT_SEAT_BONUS, GREEN_SEAT_BONUS, SEAT_BONUS_FACTOR
 import random
 
 class Deal:
     def __init__(self):
-        self.deck = [j + i for i in ['H', 'D', 'S', 'C'] for j in ['9', 'T', 'J', 'Q', 'K', 'A']]
+        self.deck = DECK
         self.seed = random.uniform(0,1)
         random.Random(self.seed).shuffle(self.deck)
         self.hands = [set(self.deck[i::5]) for i in range(0, 4)]
@@ -52,13 +52,13 @@ class Deal:
     
     def trumpify(self):
         if(self.trump == 'H'):
-            self.deck = h_deck
+            self.deck = H_DECK
         elif(self.trump == 'D'):
-            self.deck = d_deck
+            self.deck = D_DECK
         elif(self.trump == 'S'):
-            self.deck = s_deck
+            self.deck = S_DECK
         elif(self.trump == 'C'):
-            self.deck = c_deck
+            self.deck = C_DECK
 
         random.Random(self.seed).shuffle(self.deck)
         self.hands = [set(self.deck[i::5]) for i in range(0, 4)]
@@ -67,12 +67,12 @@ class Deal:
     def dealer_discard(self):
         scores = {}
         hand = self.hands[3]
-        scores[self.topcard] = score(hand, self.trump)
+        scores[self.topcard] = score_hand(hand, self.trump)
         for card in hand:
             new_hand = hand
             new_hand.remove(card)
             new_hand.add(self.topcard)
-            scores[card] = score(new_hand, self.trump)
+            scores[card] = score_hand(new_hand, self.trump)
         
         discard = max(scores.iterkeys(), key=(lambda key: scores[key]))
         self.hands[3].add(topcard)
@@ -82,16 +82,64 @@ class Deal:
 
         
 def declare(hand, topcard, seat, rnd):
-    if(rnd == 1):
-        if(seat == 1 or seat == 3):
-            score = score(hand, topcard[1])
-            score -= 
-        elif(seat == 2):
+    if rnd == 1:
+        score = score_hand_scenario(hand, topcard[1], topcard, seat)
+        if seat == 1:
             
-        elif(seat == 0):
+    elif rnd == 2:
+        scores = {}
+        for suit in ['H', 'D', 'S', 'C']:
+            if suit != topcard[1]:
+                scores = score_hand_scenario(hand, suit, topcard, seat)
+                scores[suit] = score
+        
+        best = max(scores.iterkeys(), key=(lambda key: scores[key]))
+        
 
-def score(hand, suit):
+def score_hand_scenario(hand, suit, topcard, seat):
+    if suit == topcard[1]:
+        score = score_hand(hand, suit)
+        if seat == 1 or seat == 3:
+            score += TOPCARD_PENALTY[topcard[0]]
+        elif seat == 2:
+            score += TOPCARD_BONUS[topcard[0]]
+        
+        
+            
+def score_hand(hand, suit):
+    next_suit = NEXT_DICT[suit]
+    hand = ['L'+suit if card == 'J'+next_suit else card for card in hand]
     score = 0
+    suits_in_hand = [card[1] for card in hand]
+    suit_counts = dict([(suit, suits_in_hand.count(suit)) for suit in set(suits_in_hand)])
     for card in hand:
         if card[1] == suit:
+            score += TRUMP_PTS[card[0]]
+        elif card[0] == 'A':
+            suit_count = suit_counts[card[1]]
+            if card[1] == next_suit:
+                if suit_count == 1:
+                    score += ACE_PTS['N']['singleton']
+                elif suit_count == 2:
+                    score += ACE_PTS['N']['paired']
+                else:
+                    score += ACE_PTS['N']['more']
+            else:
+                if suit_count == 1:
+                    score += ACE_PTS['G']['singleton']
+                elif suit_count == 2:
+                    score += ACE_PTS['G']['paired']
+                else:
+                    score += ACE_PTS['G']['more']
+        elif card[0] == 'K':
+            suit_count = suit_counts[card[1]]
+            if suit_count == 1 and card[1] != next_suit:
+                score += KING_PTS['G']['singleton']
+    
+    if len(suit_counts) < 3:
+        score += SUITED_BONUS[2]*suit_counts[suit]
+    elif len(suit_counts) == 4:
+        score += SUITED_BONUS[4]
+    
+    return score
             
