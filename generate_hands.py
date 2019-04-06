@@ -8,7 +8,7 @@ Created on Sat Mar 30 18:06:42 2019
 
 from constants import NEXT_DICT, VALUE_DICT, TRUMP_VALUE_DICT
 from constants import DECK, H_DECK, D_DECK, S_DECK, C_DECK
-from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS
+from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS, THRESHOLD
 from constants import TOPCARD_BONUS, TOPCARD_PENALTY
 from constants import NEXT_SEAT_BONUS, GREEN_SEAT_BONUS, SEAT_BONUS_FACTOR
 import random
@@ -65,47 +65,75 @@ class Deal:
         self.topcard = self.deck[4]
     
     def dealer_discard(self):
-        scores = {}
-        hand = self.hands[3]
-        scores[self.topcard] = score_hand(hand, self.trump)
-        for card in hand:
-            new_hand = hand
-            new_hand.remove(card)
-            new_hand.add(self.topcard)
-            scores[card] = score_hand(new_hand, self.trump)
-        
-        discard = max(scores.iterkeys(), key=(lambda key: scores[key]))
-        self.hands[3].add(topcard)
+        discard = best_discard(self.hands[3], self.topcard)
+        self.hands[3].add(self.topcard)
         self.hands[3].remove(discard)
         assert len(self.hands[3]) == 5
-        
 
+
+def best_discard(hand, topcard):
+    scores = {}
+    scores[topcard] = score_hand(hand, topcard[1])
+    for card in hand:
+        new_hand = hand
+        new_hand.remove(card)
+        new_hand.add(topcard)
+        scores[card] = score_hand(new_hand, topcard[1])
         
+    discard = max(scores.iterkeys(), key=(lambda key: scores[key]))
+    return discard, scores[discard]
+
+
 def declare(hand, topcard, seat, rnd):
     if rnd == 1:
         score = score_hand_scenario(hand, topcard[1], topcard, seat)
         if seat == 1:
+            scores = {}
+            for suit in ['H', 'D', 'S', 'C']:
+                if suit != topcard[1]:
+                    hypothetical_score = score_hand_scenario(hand, suit, topcard, seat)
+                    scores[suit] = hypothetical_score
             
+            if max(scores.values()) > score:
+                return False
+            
+        if score > THRESHOLD:
+            return topcard[1]
+        else:
+            return False
     elif rnd == 2:
         scores = {}
         for suit in ['H', 'D', 'S', 'C']:
             if suit != topcard[1]:
-                scores = score_hand_scenario(hand, suit, topcard, seat)
-                scores[suit] = score
+                hypothetical_score = score_hand_scenario(hand, suit, topcard, seat)
+                scores[suit] = hypothetical_score
         
-        best = max(scores.iterkeys(), key=(lambda key: scores[key]))
-        
+        if seat == 0 or max(scores.values()) > THRESHOLD:
+            return max(scores.iterkeys(), key=(lambda key: scores[key]))
+        else:
+            return False
+
 
 def score_hand_scenario(hand, suit, topcard, seat):
     if suit == topcard[1]:
-        score = score_hand(hand, suit)
         if seat == 1 or seat == 3:
-            score += TOPCARD_PENALTY[topcard[0]]
+            score = score_hand(hand, suit)
+            score += TOPCARD_PENALTY[suit]
         elif seat == 2:
-            score += TOPCARD_BONUS[topcard[0]]
-        
-        
-            
+            score = score_hand(hand, suit)
+            score += TOPCARD_BONUS[suit]
+        elif seat == 0:
+            discard, score = best_discard(hand, topcard)
+    elif suit == NEXT_DICT[topcard[1]]:
+        score = score_hand(hand, suit)
+        score += NEXT_SEAT_BONUS[seat] * SEAT_BONUS_FACTOR[topcard[0]]
+    else:
+        score = score_hand(hand, suit)
+        score += GREEN_SEAT_BONUS[seat] * SEAT_BONUS_FACTOR[topcard[0]]
+    
+    return score
+
+
 def score_hand(hand, suit):
     next_suit = NEXT_DICT[suit]
     hand = ['L'+suit if card == 'J'+next_suit else card for card in hand]

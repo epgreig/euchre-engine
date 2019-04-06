@@ -29,6 +29,7 @@ TRUMP_PTS = {'J': 9.5, 'L': 7.5, 'A': 6.5, 'K': 5.5, 'Q': 5.0, 'T': 4.5, '9': 4.
 ACE_PTS = {'N': {'singleton': 3.0, 'paired': 1.5, 'more': 0.0}, 'G': {'singleton': 3.5, 'paired': 2.0, 'more': 0.5}}
 KING_PTS = {'G': {'singleton': 0.5}}
 SUITED_BONUS = {2: 1, 4: -2.5}
+THRESHOLD = 14.25
 
 # Hand Scoring - First Round
 TOPCARD_BONUS = {'J': 7.5, 'A': 5.0, 'K': 4.0, 'Q': 3.5, 'T': 3.5, '9': 3.0}
