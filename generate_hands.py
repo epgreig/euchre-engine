@@ -8,15 +8,18 @@ Created on Sat Mar 30 18:06:42 2019
 
 from constants import NEXT_DICT, VALUE_DICT, TRUMP_VALUE_DICT
 from constants import DECK, H_DECK, D_DECK, S_DECK, C_DECK
-from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS, THRESHOLD
+from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS, SEAT_BONUS, THRESHOLD
 from constants import TOPCARD_BONUS, TOPCARD_PENALTY
-from constants import NEXT_SEAT_BONUS, GREEN_SEAT_BONUS, SEAT_BONUS_FACTOR
+from constants import NEXT_SEAT_ADJ, GREEN_SEAT_ADJ, SEAT_ADJ_FACTOR
 import random
 
 class Deal:
-    def __init__(self):
+    def __init__(self, seed=0):
         self.deck = DECK
-        self.seed = random.uniform(0,1)
+        if seed == 0:
+            self.seed = random.uniform(0,1)
+        else:
+            self.seed = seed
         random.Random(self.seed).shuffle(self.deck)
         self.hands = [set(self.deck[i::5]) for i in range(0, 4)]
         self.topcard = self.deck[4]
@@ -25,7 +28,6 @@ class Deal:
         if(declare(self.hands[0], self.topcard, 1, 1)):
             self.trump = self.topcard[1]
             self.caller = 1
-            self.hands[3] = best_five(self.hands[3], self.topcard)
         elif(declare(self.hands[1], self.topcard, 2, 1)):
             self.trump = self.topcard[1]
             self.caller = 2
@@ -48,7 +50,12 @@ class Deal:
             self.dealer_discard()
         
         self.trumpify()
-        
+    
+    def dealer_discard(self):
+        discard = best_discard(self.hands[3], self.topcard)[0]
+        self.hands[3].add(self.topcard)
+        self.hands[3].remove(discard)
+        assert len(self.hands[3]) == 5
     
     def trumpify(self):
         if(self.trump == 'H'):
@@ -63,24 +70,18 @@ class Deal:
         random.Random(self.seed).shuffle(self.deck)
         self.hands = [set(self.deck[i::5]) for i in range(0, 4)]
         self.topcard = self.deck[4]
-    
-    def dealer_discard(self):
-        discard = best_discard(self.hands[3], self.topcard)
-        self.hands[3].add(self.topcard)
-        self.hands[3].remove(discard)
-        assert len(self.hands[3]) == 5
 
 
 def best_discard(hand, topcard):
     scores = {}
     scores[topcard] = score_hand(hand, topcard[1])
     for card in hand:
-        new_hand = hand
+        new_hand = hand.copy()
         new_hand.remove(card)
         new_hand.add(topcard)
         scores[card] = score_hand(new_hand, topcard[1])
         
-    discard = max(scores.iterkeys(), key=(lambda key: scores[key]))
+    discard = max(scores.keys(), key=(lambda key: scores[key]))
     return discard, scores[discard]
 
 
@@ -91,8 +92,7 @@ def declare(hand, topcard, seat, rnd):
             scores = {}
             for suit in ['H', 'D', 'S', 'C']:
                 if suit != topcard[1]:
-                    hypothetical_score = score_hand_scenario(hand, suit, topcard, seat)
-                    scores[suit] = hypothetical_score
+                    scores[suit] = score_hand_scenario(hand, suit, topcard, seat)
             
             if max(scores.values()) > score:
                 return False
@@ -105,11 +105,10 @@ def declare(hand, topcard, seat, rnd):
         scores = {}
         for suit in ['H', 'D', 'S', 'C']:
             if suit != topcard[1]:
-                hypothetical_score = score_hand_scenario(hand, suit, topcard, seat)
-                scores[suit] = hypothetical_score
+                scores[suit] = score_hand_scenario(hand, suit, topcard, seat)
         
         if seat == 0 or max(scores.values()) > THRESHOLD:
-            return max(scores.iterkeys(), key=(lambda key: scores[key]))
+            return max(scores.keys(), key=(lambda key: scores[key]))
         else:
             return False
 
@@ -118,19 +117,20 @@ def score_hand_scenario(hand, suit, topcard, seat):
     if suit == topcard[1]:
         if seat == 1 or seat == 3:
             score = score_hand(hand, suit)
-            score += TOPCARD_PENALTY[suit]
+            score += TOPCARD_PENALTY[topcard[0]]
         elif seat == 2:
             score = score_hand(hand, suit)
-            score += TOPCARD_BONUS[suit]
+            score += TOPCARD_BONUS[topcard[0]]
         elif seat == 0:
             discard, score = best_discard(hand, topcard)
     elif suit == NEXT_DICT[topcard[1]]:
         score = score_hand(hand, suit)
-        score += NEXT_SEAT_BONUS[seat] * SEAT_BONUS_FACTOR[topcard[0]]
+        score += NEXT_SEAT_ADJ[seat] * SEAT_ADJ_FACTOR[topcard[0]]
     else:
         score = score_hand(hand, suit)
-        score += GREEN_SEAT_BONUS[seat] * SEAT_BONUS_FACTOR[topcard[0]]
+        score += GREEN_SEAT_ADJ[seat] * SEAT_ADJ_FACTOR[topcard[0]]
     
+    score += SEAT_BONUS[seat]
     return score
 
 
@@ -165,7 +165,8 @@ def score_hand(hand, suit):
                 score += KING_PTS['G']['singleton']
     
     if len(suit_counts) < 3:
-        score += SUITED_BONUS[2]*suit_counts[suit]
+        if suit in suit_counts:
+            score += SUITED_BONUS[2]*suit_counts[suit]
     elif len(suit_counts) == 4:
         score += SUITED_BONUS[4]
     
