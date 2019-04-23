@@ -9,37 +9,9 @@ Created on Sun Apr 21 20:57:15 2019
 from generate_hands import Deal
 from collections import defaultdict
 
-class StartingScenario:
-    def __init__(self, hand, seat, caller, topcard, discard=None, seed=0):
-        self.hand = hand
-        self.seat = seat
-        self.caller = caller
-        self.topcard = topcard
-        if self.topcard[1] == 'T':
-            self.call_round = 1
-        else:
-            self.call_round = 2
-
-        self.discard = discard
-        self.seed = seed
-    
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            if (self.hand == other.hand and
-                self.seat == other.seat and
-                self.caller == other.caller and
-                self.topcard == other.topcard and
-                self.discard == other.discard):
-                return True
-        else:
-            return False
-    
-    def __hash__(self):
-        return id(self)
-
 starting_scenarios = defaultdict(list)
 
-for i in range(100000):
+for i in range(250000):
     d = Deal()
     d.bid()
     caller = d.caller
@@ -49,5 +21,5 @@ for i in range(100000):
         if caller == seat == 0 and d.topcard[1] == 'T' and d.topcard[0] != 'L':
             discard = d.discard
 
-        ss = StartingScenario(d.hands[j], seat, caller, d.topcard, discard, d.seed)
+        ss = (tuple(sorted(d.hands[j])), seat, caller, d.topcard, discard)
         starting_scenarios[ss].append(d.hands)
