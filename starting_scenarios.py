@@ -8,10 +8,18 @@ Created on Sun Apr 21 20:57:15 2019
 
 from generate_hands import Deal
 from collections import defaultdict
+import pickle
 
-starting_scenarios = defaultdict(list)
+# to start a new file from scratch, run:
+#starting_scenarios = defaultdict(list)
 
-for i in range(250000):
+try:
+    starting_scenarios = pickle.load(open("starting_scenarios.pickle", "rb"))
+except (OSError, IOError) as e:
+    print("pickle not found, starting a new pickle file")
+    starting_scenarios = defaultdict(list)
+
+for i in range(500000):
     d = Deal()
     d.bid()
     caller = d.caller
@@ -23,3 +31,6 @@ for i in range(250000):
 
         ss = (tuple(sorted(d.hands[j])), seat, caller, d.topcard, discard)
         starting_scenarios[ss].append(d.hands)
+
+with open("starting_scenarios.pickle", "wb") as f:
+    pickle.dump(starting_scenarios, f)
