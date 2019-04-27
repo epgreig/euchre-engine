@@ -14,15 +14,28 @@ from constants import NEXT_SEAT_ADJ, GREEN_SEAT_ADJ, SEAT_ADJ_FACTOR
 import random
 
 class Deal:
-    def __init__(self, seed=0):
-        self.deck = DECK.copy()
-        if seed == 0:
-            self.seed = random.uniform(0,1)
+    def __init__(self, fixed_hand=False, seat=0, topcard=['00']):
+        self.seed = random.uniform(0,1)
+        self.fixed_hand = fixed_hand
+        if fixed_hand != False:
+            self.deck = [card for card in DECK.copy() if card not in fixed_hand + [topcard]]
+            random.Random(self.seed).shuffle(self.deck)
+            self.hands = []
+            indicator = 0
+            for i in range(4):
+                if (i+1)%4 == seat:
+                    self.hands.append(fixed_hand)
+                    indicator = 1
+                else:
+                    self.hands.append(self.deck[(i-indicator):15:3])
+            assert len(self.hands) == 4
+            self.topcard = topcard
         else:
-            self.seed = seed
-        random.Random(self.seed).shuffle(self.deck)
-        self.hands = [self.deck[i::5] for i in range(0, 4)]
-        self.topcard = self.deck[4]
+            self.deck = DECK.copy()
+            random.Random(self.seed).shuffle(self.deck)
+            self.hands = [self.deck[i:20:4] for i in range(0, 4)]
+            self.topcard = self.deck[20]
+            
     
     def bid(self):
         if(declare(self.hands[0], self.topcard, 1, 1, self.seed)):
