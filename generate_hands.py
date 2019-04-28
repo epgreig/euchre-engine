@@ -6,7 +6,7 @@ Created on Sat Mar 30 18:06:42 2019
 @author: ethangreig
 """
 
-from constants import NEXT_DICT, VALUE_DICT, TRUMP_VALUE_DICT
+from constants import NEXT_DICT
 from constants import DECK, H_DECK, D_DECK, S_DECK, C_DECK
 from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS, SEAT_BONUS, THRESHOLD
 from constants import TOPCARD_BONUS, TOPCARD_PENALTY
@@ -14,7 +14,7 @@ from constants import NEXT_SEAT_ADJ, GREEN_SEAT_ADJ, SEAT_ADJ_FACTOR
 import random
 
 class Deal:
-    def __init__(self, fixed_hand=False, seat=0, topcard=['00']):
+    def __init__(self, fixed_hand=False, seat=0, topcard='00'):
         self.seed = random.uniform(0,1)
         self.fixed_hand = fixed_hand
         if fixed_hand != False:
@@ -34,20 +34,20 @@ class Deal:
             self.deck = DECK.copy()
             random.Random(self.seed).shuffle(self.deck)
             self.hands = [self.deck[i:20:4] for i in range(0, 4)]
-            self.topcard = self.deck[20]
+            self.topcard = self.deck[21]
             
     
     def bid(self):
-        if(declare(self.hands[0], self.topcard, 1, 1, self.seed)):
+        if(declare(self.hands[0], self.topcard, 1, 1)):
             self.trump = self.topcard[1]
             self.caller = 1
-        elif(declare(self.hands[1], self.topcard, 2, 1, self.seed)):
+        elif(declare(self.hands[1], self.topcard, 2, 1)):
             self.trump = self.topcard[1]
             self.caller = 2
-        elif(declare(self.hands[2], self.topcard, 3, 1, self.seed)):
+        elif(declare(self.hands[2], self.topcard, 3, 1)):
             self.trump = self.topcard[1]
             self.caller = 3
-        elif(declare(self.hands[3], self.topcard, 0, 1, self.seed)):
+        elif(declare(self.hands[3], self.topcard, 0, 1)):
             self.trump = self.topcard[1]
             self.caller = 0
         else:
@@ -67,10 +67,8 @@ class Deal:
     def dealer_discard(self):
         discard = best_discard(self.hands[3], self.topcard)[0]
         self.discard = discard
-        new_hand = set(self.hands[3])
-        new_hand.add(self.topcard)
-        new_hand.remove(discard)
-        self.hands[3] = list(new_hand)
+        self.hands[3].append(self.topcard)
+        self.hands[3].remove(discard)
         assert len(self.hands[3]) == 5
     
     def trumpify(self):
@@ -92,16 +90,16 @@ def best_discard(hand, topcard):
     scores = {}
     scores[topcard] = score_hand(hand, topcard[1])
     for card in hand:
-        new_hand = set(hand)
+        new_hand = hand.copy()
         new_hand.remove(card)
-        new_hand.add(topcard)
-        scores[card] = score_hand(list(new_hand), topcard[1], card[1])
+        new_hand.append(topcard)
+        scores[card] = score_hand(new_hand, topcard[1], card[1])
         
     discard = max(scores.keys(), key=(lambda key: scores[key]))
     return discard, scores[discard]
 
 
-def declare(hand, topcard, seat, rnd, seed=0.5):
+def declare(hand, topcard, seat, rnd):
     if rnd == 1:
         score = score_hand_scenario(hand, topcard[1], topcard, seat)
         if seat == 1:
@@ -118,7 +116,7 @@ def declare(hand, topcard, seat, rnd, seed=0.5):
             return topcard[1]
         else:
             interval = THRESHOLD['call'] - THRESHOLD['pass']
-            threshold = THRESHOLD['pass'] + seed * interval
+            threshold = THRESHOLD['pass'] + random.uniform(0,1) * interval
             if score > threshold:
                 return topcard[1]
             else:
@@ -136,7 +134,7 @@ def declare(hand, topcard, seat, rnd, seed=0.5):
             return best_suit
         else:
             interval = THRESHOLD['call'] - THRESHOLD['pass']
-            threshold = THRESHOLD['pass'] + seed * interval
+            threshold = THRESHOLD['pass'] + random.uniform(0,1) * interval
             if score > threshold:
                 return best_suit
             else:
@@ -205,3 +203,8 @@ def score_hand(hand, suit, discarded_suit=None):
     
     return score
             
+
+d=Deal()
+d.hands
+d.topcard
+d.bid()
