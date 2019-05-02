@@ -26,17 +26,17 @@ C_DECK[14] = 'LT'
 
 # Hand Scoring
 TRUMP_PTS = {'J': 9.5, 'L': 7.5, 'A': 6.0, 'K': 5.0, 'Q': 4.5, 'T': 4.0, '9': 4.0}
-ACE_PTS = {'N': {'singleton': 2.5, 'paired': 1.0, 'more': 0.0}, 'G': {'singleton': 3.5, 'paired': 2.0, 'more': 1.0}}
-KING_PTS = {'G': {'singleton': 0.5}}
+ACE_PTS = {'N': {'singleton': 2.0, 'paired': 1.0, 'more': 1.0}, 'G': {'singleton': 3.0, 'paired': 2.0, 'more': 1.0}}
+KING_PTS = {'G': {'singleton': 0.5}, 'other': 0.33}
 SUITED_BONUS = {2: 0.5, 4: -2.5} # 2-suited bonus is multiplied by number of trumps
 SEAT_BONUS = {1: 0.0, 2: -0.5, 3: -1.5, 0: 0.0}
-THRESHOLD = {'call': 17.5, 'pass': 12.5}
+THRESHOLD = {'call': 17, 'pass': 12.5}
 
 # Hand Scoring - First Round
 TOPCARD_BONUS = {'J': 4.0, 'A': 2.5, 'K': 2.0, 'Q': 1.5, 'T': 1.5, '9': 1.0}
 TOPCARD_PENALTY = {'J': -5.0, 'A': -4.0, 'K': -3.5, 'Q': -3.0, 'T': -3.0, '9': -3.0}
 
 # Hand Scoring - Second Round
-NEXT_SEAT_ADJ = {1: 2.0, 2: -1.5, 3: 1.0, 0: -1.0}
+NEXT_SEAT_ADJ = {1: 2.5, 2: -2.0, 3: 1.5, 0: -1.0}
 GREEN_SEAT_ADJ = {1: -1.5, 2: 1.0, 3: -0.5, 0: 0.5}
 SEAT_ADJ_FACTOR = {'J': 1.0, 'A': 0.5, 'K': 0.45, 'Q': 0.35, 'T': 0.3, '9': 0.25}

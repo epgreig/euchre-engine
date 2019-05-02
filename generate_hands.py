@@ -14,8 +14,11 @@ from constants import NEXT_SEAT_ADJ, GREEN_SEAT_ADJ, SEAT_ADJ_FACTOR
 import random
 
 class Deal:
-    def __init__(self, fixed_hand=False, seat=0, topcard='00'):
-        self.seed = random.uniform(0,1)
+    def __init__(self, fixed_hand=False, seat=0, topcard='00', seed=0):
+        if seed == 0:
+            self.seed = random.uniform(0,1)
+        else:
+            self.seed = seed
         self.fixed_hand = fixed_hand
         if fixed_hand != False:
             self.deck = [card for card in DECK.copy() if card not in fixed_hand + [topcard]]
@@ -194,6 +197,8 @@ def score_hand(hand, suit, discarded_suit=None):
             elif card[0] == 'K':
                 if suit_count == 1 and card[1] != next_suit:
                     score += KING_PTS['G']['singleton']
+                else:
+                    score += KING_PTS['other']
     
     if len(suit_counts) < 3:
         if suit in suit_counts:
@@ -204,7 +209,7 @@ def score_hand(hand, suit, discarded_suit=None):
     return score
             
 
-d=Deal()
+d=Deal(seed=0.03793916255481011)
 d.hands
 d.topcard
 d.bid()
