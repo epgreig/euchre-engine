@@ -69,10 +69,7 @@ class Deal:
     
     def dealer_discard(self):
         discard = best_discard(self.hands[3], self.topcard)[0]
-        self.discard = discard
-        self.hands[3].append(self.topcard)
-        self.hands[3].remove(discard)
-        assert len(self.hands[3]) == 5
+        self.discard_id = self.hands[3].index(discard)
     
     def trumpify(self):
         if(self.trump == 'H'):
@@ -85,8 +82,13 @@ class Deal:
             self.deck = C_DECK.copy()
 
         random.Random(self.seed).shuffle(self.deck)
-        self.hands = [self.deck[i::5] for i in range(0, 4)]
-        self.topcard = self.deck[4]
+        self.hands = [self.deck[i:20:4] for i in range(0, 4)]
+        self.topcard = self.deck[21]
+        if(self.topcard[1] == 'T' and self.topcard[0] != 'L'):
+            self.discard = self.hands[3][self.discard_id]
+            self.hands[3].pop(self.discard_id)
+            self.hands[3].append(self.topcard)
+            assert len(self.hands[3]) == 5
 
 
 def best_discard(hand, topcard):
@@ -209,7 +211,7 @@ def score_hand(hand, suit, discarded_suit=None):
     return score
             
 
-d=Deal(seed=0.03793916255481011)
+d=Deal(seed=0.5712550921559362)
 d.hands
 d.topcard
 d.bid()

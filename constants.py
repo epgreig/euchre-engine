@@ -25,9 +25,9 @@ C_DECK = [j + i for i in ['A', 'B', 'N'] for j in ['X', 'X', 'X', 'Q', 'K', 'A']
 C_DECK[14] = 'LT'
 
 # Hand Scoring
-TRUMP_PTS = {'J': 9.5, 'L': 7.5, 'A': 6.0, 'K': 5.0, 'Q': 4.5, 'T': 4.0, '9': 4.0}
-ACE_PTS = {'N': {'singleton': 2.0, 'paired': 1.0, 'more': 1.0}, 'G': {'singleton': 3.0, 'paired': 2.0, 'more': 1.0}}
-KING_PTS = {'G': {'singleton': 0.5}, 'other': 0.33}
+TRUMP_PTS = {'J': 9.5, 'L': 7.0, 'A': 6.0, 'K': 5.0, 'Q': 4.5, 'T': 4.0, '9': 4.0}
+ACE_PTS = {'N': {'singleton': 2.0, 'paired': 1.0, 'more': 1.0}, 'G': {'singleton': 2.5, 'paired': 2.0, 'more': 1.0}}
+KING_PTS = {'G': {'singleton': 0.5}, 'other': 0.5}
 SUITED_BONUS = {2: 0.5, 4: -2.5} # 2-suited bonus is multiplied by number of trumps
 SEAT_BONUS = {1: 0.0, 2: -0.5, 3: -1.5, 0: 0.0}
 THRESHOLD = {'call': 17, 'pass': 12.5}
