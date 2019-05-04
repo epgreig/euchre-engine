@@ -7,7 +7,7 @@ Created on Sat Mar 30 18:06:42 2019
 """
 
 from constants import NEXT_DICT
-from constants import DECK, H_DECK, D_DECK, S_DECK, C_DECK
+from constants import DECK, H_DICT, D_DICT, S_DICT, C_DICT
 from constants import TRUMP_PTS, ACE_PTS, KING_PTS, SUITED_BONUS, SEAT_BONUS, THRESHOLD
 from constants import TOPCARD_BONUS, TOPCARD_PENALTY
 from constants import NEXT_SEAT_ADJ, GREEN_SEAT_ADJ, SEAT_ADJ_FACTOR
@@ -20,8 +20,9 @@ class Deal:
         else:
             self.seed = seed
         self.fixed_hand = fixed_hand
-        if fixed_hand != False:
-            self.deck = [card for card in DECK.copy() if card not in fixed_hand + [topcard]]
+        if self.fixed_hand != False:
+            self.fixed_hand_ids = [i for i in range(24) if DECK[i] in self.fixed_hand]
+            self.deck = [card for card in DECK if card not in fixed_hand + [topcard]]
             random.Random(self.seed).shuffle(self.deck)
             self.hands = []
             indicator = 0
@@ -37,10 +38,10 @@ class Deal:
             self.deck = DECK.copy()
             random.Random(self.seed).shuffle(self.deck)
             self.hands = [self.deck[i:20:4] for i in range(0, 4)]
-            self.topcard = self.deck[21]
-            
+            self.topcard = self.deck[20]
     
     def bid(self):
+        self.pickup = True
         if(declare(self.hands[0], self.topcard, 1, 1)):
             self.trump = self.topcard[1]
             self.caller = 1
@@ -54,41 +55,42 @@ class Deal:
             self.trump = self.topcard[1]
             self.caller = 0
         else:
+            self.pickup = False
             for i in range(4):
                 seat = (i+1)%4
                 d = declare(self.hands[i], self.topcard, seat, 2)
-                if(d):
+                if(d != False):
                     self.trump = d
                     self.caller = seat
                     break
 
-        if(self.trump == self.topcard[1]):
+        if(self.pickup):
             self.dealer_discard()
         
         self.trumpify()
     
     def dealer_discard(self):
-        discard = best_discard(self.hands[3], self.topcard)[0]
-        self.discard_id = self.hands[3].index(discard)
+        self.discard = best_discard(self.hands[3], self.topcard)[0]
+        self.hands[3].remove(self.discard)
+        self.hands[3].append(self.topcard)
+        assert len(self.hands[3]) == 5
     
     def trumpify(self):
-        if(self.trump == 'H'):
-            self.deck = H_DECK.copy()
-        elif(self.trump == 'D'):
-            self.deck = D_DECK.copy()
-        elif(self.trump == 'S'):
-            self.deck = S_DECK.copy()
-        elif(self.trump == 'C'):
-            self.deck = C_DECK.copy()
-
-        random.Random(self.seed).shuffle(self.deck)
-        self.hands = [self.deck[i:20:4] for i in range(0, 4)]
-        self.topcard = self.deck[21]
-        if(self.topcard[1] == 'T' and self.topcard[0] != 'L'):
-            self.discard = self.hands[3][self.discard_id]
-            self.hands[3].pop(self.discard_id)
-            self.hands[3].append(self.topcard)
-            assert len(self.hands[3]) == 5
+        if self.trump == 'H':
+            T_DICT = H_DICT
+        elif self.trump == 'D':
+            T_DICT = D_DICT
+        elif self.trump == 'S':
+            T_DICT = S_DICT
+        elif self.trump == 'C':
+            T_DICT = C_DICT
+        
+        self.topcard = T_DICT[self.topcard]
+        for i in range(4):
+            self.hands[i] = [T_DICT[card] for card in self.hands[i]]
+        
+        if self.pickup:
+            self.discard = T_DICT[self.discard]
 
 
 def best_discard(hand, topcard):
@@ -211,7 +213,7 @@ def score_hand(hand, suit, discarded_suit=None):
     return score
             
 
-d=Deal(seed=0.5712550921559362)
+d=Deal(seed=0.5)
 d.hands
 d.topcard
 d.bid()
