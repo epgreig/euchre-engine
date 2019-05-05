@@ -71,8 +71,9 @@ class Deal:
     
     def dealer_discard(self):
         self.discard = best_discard(self.hands[3], self.topcard)[0]
-        self.hands[3].remove(self.discard)
-        self.hands[3].append(self.topcard)
+        if self.discard in self.hands[3]:
+            self.hands[3].remove(self.discard)
+            self.hands[3].append(self.topcard)
         assert len(self.hands[3]) == 5
     
     def trumpify(self):
