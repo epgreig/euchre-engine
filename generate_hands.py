@@ -213,7 +213,7 @@ def score_hand(hand, suit, discarded_suit=None):
     return score
             
 
-d=Deal(seed=0.5)
+d=Deal(seed=0.7307849952015257)
 d.hands
 d.topcard
 d.bid()
