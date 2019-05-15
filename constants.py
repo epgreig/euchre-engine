@@ -42,10 +42,10 @@ SEAT_BONUS = {1: 0.0, 2: -0.5, 3: -1.5, 0: 0.0}
 THRESHOLD = {'call': 17, 'pass': 13}
 
 # Hand Scoring - First Round
-TOPCARD_BONUS = {'J': 2.5, 'A': 2.0, 'K': 1.5, 'Q': 1.5, 'T': 1.5, '9': 1.5}
+TOPCARD_BONUS = {'J': 2.5, 'A': 2.0, 'K': 2.0, 'Q': 1.75, 'T': 1.75, '9': 1.75}
 TOPCARD_PENALTY = {'J': -3.0, 'A': -2.0, 'K': -2.0, 'Q': -1.5, 'T': -1.5, '9': -1.5}
 
 # Hand Scoring - Second Round
 NEXT_SEAT_ADJ = {1: 3.5, 2: -2.5, 3: 1.5, 0: -1.0}
-GREEN_SEAT_ADJ = {1: -2.0, 2: 1.0, 3: -0.5, 0: 0.5}
-SEAT_ADJ_FACTOR = {'J': 1.0, 'A': 0.5, 'K': 0.45, 'Q': 0.4, 'T': 0.35, '9': 0.3}
+GREEN_SEAT_ADJ = {1: -2.0, 2: 1.5, 3: -0.5, 0: 0.5}
+SEAT_ADJ_FACTOR = {'J': 1.0, 'A': 0.5, 'K': 0.45, 'Q': 0.45, 'T': 0.4, '9': 0.4}
