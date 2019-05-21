@@ -34,16 +34,16 @@ C_DICT = {'JC':'JT', 'JS':'LT', 'AC':'AT', 'KC':'KT', 'QC':'QT', 'TC':'TT', '9C'
           'AD':'AB', 'KD':'KB', 'QD':'QB', 'JD':'XB', 'TD':'XB', '9D':'XB'}
 
 # Hand Scoring
-TRUMP_PTS = {'J': 9.0, 'L': 6.5, 'A': 4.5, 'K': 4.0, 'Q': 3.5, 'T': 3.25, '9': 3.0}
+TRUMP_PTS = {'J': 9.5, 'L': 7.0, 'A': 5.5, 'K': 5.0, 'Q': 4.5, 'T': 4.25, '9': 4.0}
 ACE_PTS = {'N': {'singleton': 2.0, 'paired': 1.5, 'more': 1.5}, 'G': {'singleton': 3.0, 'paired': 2.0, 'more': 1.5}}
 KING_PTS = {'singleton': 0.25, 'paired': 0.5, 'more': 0.25}
-SUITED_BONUS = {2: 1.25, 3: 0.75, 4: -1.0} # 2-, and 3-suited bonuses are multiplied by number of trumps
-SEAT_BONUS = {1: -0.5, 2: -0.75, 3: -1.5, 0: 0.0}
-THRESHOLD = {'call': 17, 'pass': 13}
+SUITED_BONUS = {2: 0.5, 4: -2.5} # 2-suited bonus is multiplied by number of trumps
+SEAT_BONUS = {1: -0.5, 2: -0.75, 3: -1.25, 0: 0.0}
+THRESHOLD = {'call': 16, 'pass': 13}
 
 # Hand Scoring - First Round
 TOPCARD_BONUS = {'J': 3.0, 'A': 2.0, 'K': 2.0, 'Q': 1.75, 'T': 1.75, '9': 1.75}
-TOPCARD_PENALTY = {'J': -3.0, 'A': -2.0, 'K': -2.0, 'Q': -1.5, 'T': -1.5, '9': -1.5}
+TOPCARD_PENALTY = {'J': -3.0, 'A': -2.0, 'K': -2.0, 'Q': -1.75, 'T': -1.75, '9': -1.75}
 
 # Hand Scoring - Second Round
 NEXT_SEAT_ADJ = {1: 3.5, 2: -2.5, 3: 1.5, 0: -0.5}

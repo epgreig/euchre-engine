@@ -200,10 +200,12 @@ def score_hand(hand, suit, discarded_suit=None):
                     else:
                         score += ACE_PTS['G']['more']
             elif card[0] == 'K':
-                if suit_count == 1 and card[1] != next_suit:
-                    score += KING_PTS['G']['singleton']
+                if suit_count == 1:
+                    score += KING_PTS['singleton']
+                elif suit_count == 2:
+                    score += KING_PTS['paired']
                 else:
-                    score += KING_PTS['other']
+                    score += KING_PTS['more']
     
     if len(suit_counts) < 3:
         if suit in suit_counts:

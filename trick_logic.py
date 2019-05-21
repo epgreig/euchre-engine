@@ -6,11 +6,9 @@ Created on Sat Mar 30 17:54:58 2019
 @author: ethangreig
 """
 
-import numpy as np
 from constants import next_dict, value_dict, trump_value_dict
 from random import shuffle
-from functools import reduce
-        
+
 
 class Round:
     def __init__(self, deal):
