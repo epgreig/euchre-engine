@@ -10,12 +10,12 @@ This engine will be buit using a Reinforced Learning algorithm. Given a standard
 For now, the process of declaring trump will not be executed by this engine. What I have done is created a relatively simple points system to estimate how likely any bidding situation is to result in Bid or Pass. From this algorithm, I can randomly generate a Euchre deal, and apply the algorithm to each player until the result is a Trump declaration. Note that according to the ruleset I am using, "Stick the Dealer", the dealer must always select a trump suit in the second round of voting. Also note that this points algorithm will also be used to determine the discarded card if the dealer is "ordered up". So my algorithm maps each random deal to a Trump declaration, which in turn generates four realistic Hand Scenarios, one for each seat in the round.
 
 ## Hand Scenarios
-There are four variables which determine a unique Hand Scenario for a particular player ("Player"):
+There are five variables which determine a unique Hand Scenario for a particular player ("Player"):
 1. Player's seat
 2. Player's 5 cards (relative to trump)
 3. The upcard
 4. Which seat declared trump
-5. Player's discard (if Player picked up the upcard)
+5. Player's discard (if Player is the dealer and picked up the upcard)
 
 Note: There are two notable omissions
 a) it doesn't matter which actual suit is trump, because the suits of all cards in the deck (notably, the upcard and your hand) can be permuted without changing the scenario.
