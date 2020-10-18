@@ -67,7 +67,7 @@ class Deal:
         if(self.pickup):
             self.dealer_discard()
         
-        self.trumpify()
+        #self.trumpify()
     
     def dealer_discard(self):
         self.discard = best_discard(self.hands[3], self.topcard)[0]
@@ -214,9 +214,3 @@ def score_hand(hand, suit, discarded_suit=None):
         score += SUITED_BONUS[4]
     
     return score
-            
-
-d=Deal(seed=0.7307849952015257)
-d.hands
-d.topcard
-d.bid()
