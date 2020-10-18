@@ -49,3 +49,17 @@ TOPCARD_PENALTY = {'J': -2.5, 'A': -1.5, 'K': -1.5, 'Q': -1.25, 'T': -1.25, '9':
 NEXT_SEAT_ADJ = {1: 4.0, 2: -2.0, 3: 1.5, 0: 0.0}
 GREEN_SEAT_ADJ = {1: -2.0, 2: 2.5, 3: -0.5, 0: 0.0}
 SEAT_ADJ_FACTOR = {'J': 1.0, 'A': 0.75, 'K': 0.75, 'Q': 0.75, 'T': 0.75, '9': 0.75}
+
+
+# Encoded string:
+# {Caller (0,1,2,3)}{1st Hand}{2nd Hand}{3rd Hand}{Dealer Hand}{Upcard}{Discard}
+
+ENCODING_DICT = {'JT': 'A', 'AN': 'H', 'AA': 'N', 'AB': 'U',
+                 'LT': 'B', 'KN': 'J', 'KA': 'P', 'KB': 'V',
+                 'AT': 'C', 'QN': 'K', 'QA': 'Q', 'QB': 'W',
+                 'KT': 'D', 'TN': 'L', 'JA': 'R', 'JB': 'X',
+                 'QT': 'E', '9N': 'M', 'TA': 'S', 'TB': 'Y',
+                 'TT': 'F',            '9A': 'T', '9B': 'Z',
+                 '9T': 'G'}
+
+DECODING_DICT = {v: k for k, v in ENCODING_DICT.items()}
