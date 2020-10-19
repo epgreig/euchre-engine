@@ -18,9 +18,9 @@ except (OSError, IOError):
     print("pickle not found, starting a new pickle file")
     scenarios = list()
 
-for i in range(5000):
+for i in range(50000):
     s = Scenario()
-    scenarios.append(s)
+    scenarios.append(s.encoded)
 
 with open("scenarios.pickle", "wb") as f:
     pickle.dump(scenarios, f)
