@@ -73,8 +73,7 @@ class Scenario:
         
         discard = topcard
         if (pickup):
-            (hands, discard) = dealer_discard(suited_hands[3], topcard)
-            suited_hands = hands
+            suited_hands[3], discard = dealer_discard(suited_hands[3], topcard)
         
         self.trumpify(trump, suited_hands, topcard, discard)
         self.encode()
@@ -96,16 +95,23 @@ class Scenario:
             self.hands[i] = [T_DICT[card] for card in hands[i]]
 
     def encode(self):
-        caller = self.caller
-        enc_1h = [ENCODING_DICT[card] for card in self.hands[0]].sort()
-        enc_2h = [ENCODING_DICT[card] for card in self.hands[1]].sort()
-        enc_3h = [ENCODING_DICT[card] for card in self.hands[2]].sort()
-        enc_dh = [ENCODING_DICT[card] for card in self.hands[3]].sort()
+        caller = str(self.caller)
+        enc_1h = [ENCODING_DICT[card] for card in self.hands[0]]
+        enc_1h.sort()
+        enc_1h = ''.join(enc_1h)
+        enc_2h = [ENCODING_DICT[card] for card in self.hands[1]]
+        enc_2h.sort()
+        enc_2h = ''.join(enc_2h)
+        enc_3h = [ENCODING_DICT[card] for card in self.hands[2]]
+        enc_3h.sort()
+        enc_3h = ''.join(enc_3h)
+        enc_dh = [ENCODING_DICT[card] for card in self.hands[3]]
+        enc_dh.sort()
+        enc_dh = ''.join(enc_dh)
         enc_tc = ENCODING_DICT[self.topcard]
         enc_dc = ENCODING_DICT[self.discard]
         self.encoded = caller + enc_1h + enc_2h + enc_3h + enc_dh + enc_tc + enc_dc
         assert len(self.encoded) == 23
-        assert len(set(self.encoded)) == 22
         
     def decode(self, enc):
         self.encoded = enc
@@ -232,7 +238,7 @@ def score_hand(hand, suit, discarded_suit=None):
 
 
 def dealer_discard(hand, topcard):
-    discard = best_discard(hand, topcard)
+    discard, _ = best_discard(hand, topcard)
     if discard in hand:
         hand.remove(discard)
         hand.append(topcard)

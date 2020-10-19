@@ -6,6 +6,8 @@ Created on Sat Mar 30 17:55:41 2019
 @author: ethangreig
 """
 
+import sys
+
 # Next suit
 NEXT_DICT = {'H':'D', 'D':'H', 'S':'C', 'C':'S'}
 
@@ -54,12 +56,12 @@ SEAT_ADJ_FACTOR = {'J': 1.0, 'A': 0.75, 'K': 0.75, 'Q': 0.75, 'T': 0.75, '9': 0.
 # Encoded string:
 # {Caller (0,1,2,3)}{1st Hand}{2nd Hand}{3rd Hand}{Dealer Hand}{Upcard}{Discard}
 
-ENCODING_DICT = {'JT': 'A', 'AN': 'H', 'AA': 'N', 'AB': 'U',
-                 'LT': 'B', 'KN': 'J', 'KA': 'P', 'KB': 'V',
-                 'AT': 'C', 'QN': 'K', 'QA': 'Q', 'QB': 'W',
-                 'KT': 'D', 'TN': 'L', 'JA': 'R', 'JB': 'X',
-                 'QT': 'E', '9N': 'M', 'TA': 'S', 'TB': 'Y',
-                 'TT': 'F',            '9A': 'T', '9B': 'Z',
+ENCODING_DICT = {'JT': sys.intern('A'), 'AN': 'H', 'AA': 'M', 'AB': 'R',
+                 'LT': 'B', 'KN': 'J', 'KA': 'N', 'KB': 'S',
+                 'AT': 'C', 'QN': 'K', 'QA': 'P', 'QB': 'T',
+                 'KT': 'D', 'XN': 'L', 'XA': 'Q', 'XB': 'U',
+                 'QT': 'E',
+                 'TT': 'F',
                  '9T': 'G'}
 
 DECODING_DICT = {v: k for k, v in ENCODING_DICT.items()}
