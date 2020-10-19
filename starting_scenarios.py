@@ -19,7 +19,7 @@ except (OSError, IOError) as e:
     print("pickle not found, starting a new pickle file")
     starting_scenarios = defaultdict(list)
 
-for i in range(500000):
+for i in range(5000):
     d = Deal()
     d.bid()
     caller = d.caller

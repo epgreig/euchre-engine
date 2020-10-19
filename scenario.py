@@ -36,16 +36,17 @@ class Scenario:
             self.decode(self.encoded)
         elif isinstance(args[0], Deal):
             deal = args[0]
-            if (len(args) == 1):
-                self.seed = random.uniform(0,1)
-            else:
-                self.seed = args[1]
         else:
             raise Exception("input for Scenario must be nothing, an encoded Scenario, a Deal, or a Deal and a seed") 
+        
+        if (len(args) > 1):
+            self.seed = args[1]
+        else:
+            self.seed = random.uniform(0,1)
 
         random.Random(self.seed)
         self.bid(deal.hands, deal.topcard)
-        
+
     def bid(self, suited_hands, topcard):
         pickup = True
         if(declare(suited_hands[0], topcard, 1, 1)):
@@ -72,11 +73,12 @@ class Scenario:
         
         discard = topcard
         if (pickup):
-            (suited_hands, discard) = dealer_discard(suited_hands, topcard)
+            (hands, discard) = dealer_discard(suited_hands[3], topcard)
+            suited_hands = hands
         
         self.trumpify(trump, suited_hands, topcard, discard)
         self.encode()
-    
+
     def trumpify(self, trump, hands, topcard, discard):
         if trump == 'H':
             T_DICT = H_DICT
@@ -92,7 +94,7 @@ class Scenario:
         self.hands = [None] * 4
         for i in range(4):
             self.hands[i] = [T_DICT[card] for card in hands[i]]
-    
+
     def encode(self):
         caller = self.caller
         enc_1h = [ENCODING_DICT[card] for card in self.hands[0]].sort()
