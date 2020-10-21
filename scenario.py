@@ -33,7 +33,7 @@ class Scenario:
         if (len(args) == 0):
             deal = Deal()
         elif isinstance(args[0], str):
-            self.decode(self.encoded)
+            self.decode(args[0])
         elif isinstance(args[0], Deal):
             deal = args[0]
         else:
@@ -44,8 +44,9 @@ class Scenario:
         else:
             self.seed = random.uniform(0,1)
 
-        random.Random(self.seed)
-        self.bid(deal.hands, deal.topcard)
+        if not hasattr(self, 'encoded'):
+            random.Random(self.seed)
+            self.bid(deal.hands, deal.topcard)
 
     def bid(self, suited_hands, topcard):
         pickup = True
@@ -115,7 +116,7 @@ class Scenario:
         
     def decode(self, enc):
         self.encoded = enc
-        self.caller = DECODING_DICT[enc[0]]
+        self.caller = enc[0]
         self.hands = [None] * 4
         self.hands[0] = [DECODING_DICT[card] for card in enc[1:6]]
         self.hands[1] = [DECODING_DICT[card] for card in enc[6:11]]
