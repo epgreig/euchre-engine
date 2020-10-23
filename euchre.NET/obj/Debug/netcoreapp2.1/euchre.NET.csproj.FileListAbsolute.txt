@@ -1,0 +1,17 @@
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/bin/Debug/netcoreapp2.1/euchre.NET.deps.json
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/bin/Debug/netcoreapp2.1/euchre.NET.runtimeconfig.json
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/bin/Debug/netcoreapp2.1/euchre.NET.runtimeconfig.dev.json
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/bin/Debug/netcoreapp2.1/euchre.NET.dll
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/bin/Debug/netcoreapp2.1/euchre.NET.pdb
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.csprojAssemblyReference.cache
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.csproj.CoreCompileInputs.cache
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.AssemblyInfoInputs.cache
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.AssemblyInfo.cs
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.dll
+/Users/ethangreig/Repos/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.pdb
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.csprojAssemblyReference.cache
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.csproj.CoreCompileInputs.cache
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.AssemblyInfoInputs.cache
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.AssemblyInfo.cs
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.dll
+/Users/ethangreig/Repos/old/euchre.NET/euchre.NET/obj/Debug/netcoreapp2.1/euchre.NET.pdb
