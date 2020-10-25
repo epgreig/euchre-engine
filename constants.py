@@ -40,12 +40,12 @@ TRUMP_PTS = {'J': 9.5, 'L': 6, 'A': 5.5, 'K': 5.0, 'Q': 4.75, 'T': 4.5, '9': 4.2
 ACE_PTS = {'N': {'singleton': 1.75, 'paired': 1.5, 'more': 1.5}, 'G': {'singleton': 2.75, 'paired': 1.75, 'more': 1.5}}
 KING_PTS = {'singleton': 0.25, 'paired': 0.5, 'more': 0.25}
 SUITED_BONUS = {2: 0.5, 4: -2} # 2-suited bonus is multiplied by number of trumps
-SEAT_BONUS = {1: 0.5, 2: 0, 3: -1.5, 0: 0.5}
-THRESHOLD = {'call': 17, 'pass': 13}
+SEAT_BONUS = {1: 0.5, 2: 0, 3: -1.5, 0: 1.0}
+THRESHOLD = {'call': 17.5, 'pass': 13}
 
 # Hand Scoring - First Round
-TOPCARD_BONUS = {'J': 3.0, 'A': 2.0, 'K': 2.0, 'Q': 1.75, 'T': 1.75, '9': 1.75}
-TOPCARD_PENALTY = {'J': -2.5, 'A': -1.5, 'K': -1.5, 'Q': -1.25, 'T': -1.25, '9': -1.25}
+TOPCARD_BONUS = {'J': 2.75, 'A': 2.25, 'K': 2.0, 'Q': 1.75, 'T': 1.75, '9': 1.75}
+TOPCARD_PENALTY = {'J': -2.5, 'A': -1.75, 'K': -1.75, 'Q': -1.5, 'T': -1.5, '9': -1.5}
 
 # Hand Scoring - Second Round
 NEXT_SEAT_ADJ = {1: 3, 2: -2.0, 3: 1.5, 0: 0.0}

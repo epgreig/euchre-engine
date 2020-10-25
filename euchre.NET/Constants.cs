@@ -6,10 +6,10 @@ namespace euchre.NET
 {
     public static class Constants
     {
-        private static IEnumerable<char> RANKS => new[] { 'A', 'K', 'Q', 'J', 'T', '9' };
-        private static IEnumerable<char> SUITS => new[] { 'H', 'D', 'S', 'C' };
-        public static IEnumerable<Card> DECK
-            => from suit in SUITS from rank in RANKS select new Card(rank, suit);
+        public static IEnumerable<char> RANKS => new List<char>() { 'A', 'K', 'Q', 'J', 'T', '9' };
+        public static IEnumerable<char> SUITS => new List<char>() { 'H', 'D', 'S', 'C' };
+        public static List<Card> DECK
+            => (List<Card>)(from suit in SUITS from rank in RANKS select new Card(rank, suit));
 
         public static Dictionary<char, char> NEXT_DICT => new Dictionary<char, char>() { { 'H', 'D' }, { 'D', 'H' }, { 'S', 'C' }, { 'C', 'S' } };
         public static Dictionary<char, char> H_TRUMP_DICT => new Dictionary<char, char>() { { 'H', 'T' }, { 'D', 'N' }, { 'S', 'A' }, { 'C', 'B' } };
@@ -17,8 +17,9 @@ namespace euchre.NET
         public static Dictionary<char, char> S_TRUMP_DICT => new Dictionary<char, char>() { { 'S', 'T' }, { 'C', 'N' }, { 'H', 'A' }, { 'D', 'B' } };
         public static Dictionary<char, char> C_TRUMP_DICT => new Dictionary<char, char>() { { 'C', 'T' }, { 'S', 'N' }, { 'H', 'A' }, { 'D', 'B' } };
 
-        public static IEnumerable<Card> deck TrumpifyDeck(IEnumerable<Card> deck, char trumpSuit)
+        public static IEnumerable<Card> TrumpifyDeck/Hands(IEnumerable<Card> deck, char trumpSuit)
         {
+            var result = new IEnumerable<Card>();
             var nextSuit = NEXT_DICT[trumpSuit];
 
             Dictionary<char, char> suitMapping;
@@ -44,7 +45,7 @@ namespace euchre.NET
             {
                 if (card.Suit == trumpSuit)
                 {
-                    card.Suit = 'T';
+                    result.Append(new Card(card.Rank, 'T'));
                 }
                 if ((card.Rank == 'J') && (card.Suit == nextSuit))
                 {
