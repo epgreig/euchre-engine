@@ -13,4 +13,9 @@ namespace euchre.NET
         }
     }
 
+    public static class CardExtensions
+    {
+        public static Card Copy(this Card card)
+            => new Card(card.Rank, card.Suit);
+    }
 }

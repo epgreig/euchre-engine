@@ -4,27 +4,30 @@ namespace euchre.NET
     public class Scenario
     {
         public Deal Deal;
-        public Random RNG;
+        public int Caller;
+        public char? TrumpSuit;
+        public Even
+        public readonly int Seed;
         public string Encoded;
 
         public Scenario()
         {
             Deal = new Deal();
-            RNG = new Random();
+            Seed = (new Random()).Next();
             ExecuteBiddingRound();
         }
 
         public Scenario(Deal deal)
         {
             Deal = deal;
-            RNG = new Random();
+            Seed = (new Random()).Next();
             ExecuteBiddingRound();
         }
 
         public Scenario(Deal deal, int seed)
         {
             Deal = deal;
-            RNG = new Random(seed);
+            Seed = seed;
             ExecuteBiddingRound();
         }
 
@@ -40,9 +43,35 @@ namespace euchre.NET
 
         private void DetermineBid()
         {
-            var pickup = true;
-            if (Caller.Declare(Deal.Hands[0], Deal.Upcard, 1, 1, RNG, out char trump))
+            var bidder = new Bidder(new Random(Seed));
+            bool pickup = false;
 
+            for (int i = 0; i <= 3; i++)
+            {
+                int seat = (i + 1) % 4;
+                if (bidder.OrderUp(Deal.Hands[i], Deal.Upcard, seat))
+                {
+                    Caller = seat;
+                    TrumpSuit = Deal.Upcard.Suit;
+                    pickup = true;
+                    break;
+                }
+            }
+
+            if (!pickup)
+            {
+                for (int i = 0; i <= 3; i++)
+                {
+                    int seat = (i + 1) % 4;
+                    if (bidder.Declare(Deal.Hands[i], Deal.Upcard, seat, out TrumpSuit)
+                    {
+                        Caller = seat;
+                        break;
+                    }
+                }
+            }
+
+            if (pickup)
 
         }
 

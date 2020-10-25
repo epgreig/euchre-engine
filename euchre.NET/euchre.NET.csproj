@@ -7,5 +7,6 @@
 
   <ItemGroup>
     <Compile Remove="EmptyClass.cs" />
+    <Compile Remove="Card %28copy%29.cs" />
   </ItemGroup>
 </Project>
