@@ -8,7 +8,7 @@ namespace euchre.NET
     {
         public readonly int Seed;
         public List<Card> Deck;
-        public IList<IEnumerable<Card>> Hands;
+        public IList<IList<Card>> Hands;
         public Card Upcard;
 
         public Deal()
@@ -46,9 +46,9 @@ namespace euchre.NET
 
         private void DealHands()
         {
-            Hands = new List<IEnumerable<Card>>();
+            Hands = new List<IList<Card>>();
             for (int i = 0; i <= 3; i++)
-                Hands.Append(Deck.GetRange(5 * i, 5)));
+                Hands.Append(Deck.GetRange(5 * i, 5));
 
             Upcard = Deck[20];
         }

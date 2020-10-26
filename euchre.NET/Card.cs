@@ -17,5 +17,25 @@ namespace euchre.NET
     {
         public static Card Copy(this Card card)
             => new Card(card.Rank, card.Suit);
+
+        public static Card Trumpify(this Card card, char trump)
+        {
+            if (card.Suit == trump)
+            {
+                card.Suit = 'T';
+            }
+            else if (card.Suit == Constants.NEXT_DICT[trump])
+            {
+                card.
+                if (card.Rank == 'J')
+                    card.Rank = 'L';
+                else if (Constants.LOWER_RANKS.Contains(card.Rank))
+                    card.Rank = 'X';
+            }
+            else
+            {
+
+            }
+        }
     }
 }
