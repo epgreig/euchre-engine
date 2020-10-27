@@ -6,14 +6,13 @@ namespace Euchre.NET
     class Program
     {
         static void Main(string[] args)
-        {
+        {/*
             PrintGreeting();
             var modes = DefineModes();
             var mode = SelectMode(modes);
-
-            Main(null);
+            */
         }
-
+        /*
         private static void PrintGreeting()
         {
             var horiz_line = new String('#', Console.WindowWidth);
@@ -61,6 +60,7 @@ namespace Euchre.NET
             modes.Add(new Mode(2, "Analyze a Hand"));
             return modes;
         }
+        */
     }
 
     public struct Mode

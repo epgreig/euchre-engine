@@ -25,18 +25,31 @@ namespace Euchre.NET
             {
                 card.Suit = 'T';
             }
-            else if (card.Suit == Constants.NEXT_DICT[trump])
-            {
-                card.
-                if (card.Rank == 'J')
-                    card.Rank = 'L';
-                else if (Constants.LOWER_RANKS.Contains(card.Rank))
-                    card.Rank = 'X';
-            }
             else
             {
+                if (card.Suit == Constants.NEXT_DICT[trump])
+                {
+                    card.Suit = 'N';
+                    if (card.Rank == 'J')
+                    {
+                        card.Rank = 'L';
+                        card.Suit = 'T';
+                    }
+                }
+                else
+                {
+                    var GREEN_DICT = Constants.RED_SUITS.Contains(trump)
+                        ? Constants.RED_TRUMP_DICT
+                        : Constants.BLACK_TRUMP_DICT;
 
+                    card.Suit = GREEN_DICT[card.Suit];
+                }
+
+                if (Constants.LOWER_RANKS.Contains(card.Rank))
+                    card.Rank = 'X';
             }
+
+            return card;
         }
     }
 }

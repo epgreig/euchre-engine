@@ -186,8 +186,10 @@ namespace Euchre.NET
 
             for (int i = 0; i < hand.Count(); i++)
             {
-                var handCopy = new List<Card>(hand);
-                handCopy[i] = upcard;
+                var handCopy = new List<Card>(hand)
+                {
+                    [i] = upcard
+                };
                 float score = ScoreHighCards(handCopy, trump, hand[i].Suit);
                 if (score > bestScore)
                 {

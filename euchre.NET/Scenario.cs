@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
-namespace euchre.NET
+namespace Euchre.NET
 {
-    public class Scenario
+    public class Scenario : ISerializable
     {
         public Deal Deal;
         public int Caller;
@@ -36,14 +38,26 @@ namespace euchre.NET
             ExecuteBiddingRound();
         }
 
-        public Scenario(string encoded)
-            => Decode(encoded);
+        // Custom Serialization
+        public Scenario(SerializationInfo info, StreamingContext context)
+        {
+            Caller = info.GetInt32("i");
+            Upcard = (Card)info.GetValue("upcard", Upcard.GetType());
+            Hands = (List<IEnumerable<Card>>)info.GetValue("hands", Hands.GetType());
+        }
+
+        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("caller", Caller);
+            info.AddValue("upcard", Upcard);
+            info.AddValue("hands", Hands);
+        }
 
         private void ExecuteBiddingRound()
         {
             DetermineBid();
             TrumpifyDeck();
-            Encode();
         }
 
         private void DetermineBid()
@@ -97,16 +111,6 @@ namespace euchre.NET
             Hands = new List<IEnumerable<Card>>();
             foreach (var hand in Deal.Hands)
                 Hands.Append(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
-        }
-
-        private void Encode()
-        {
-
-        }
-
-        private void Decode(string encoded)
-        {
-
         }
     }
 }
