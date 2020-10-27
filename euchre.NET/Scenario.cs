@@ -1,112 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic; // List
 
-namespace euchre.NET
+namespace Euchre.NET
 {
-    public class Scenario
+    class Program
     {
-        public Deal Deal;
-        public int Caller;
-        public char TrumpSuit;
-        public List<IEnumerable<Card>> Hands;
-        public Card Upcard;
-        public Card Downcard;
-        public readonly int Seed;
-        public string Encoded;
-
-        public Scenario()
+        static void Main(string[] args)
         {
-            Deal = new Deal();
-            Seed = (new Random()).Next();
-            ExecuteBiddingRound();
+            PrintGreeting();
+            var modes = DefineModes();
+            var mode = SelectMode(modes);
+
+            Main(null);
         }
 
-        public Scenario(Deal deal)
+        private static void PrintGreeting()
         {
-            Deal = deal;
-            Seed = (new Random()).Next();
-            ExecuteBiddingRound();
+            var horiz_line = new String('#', Console.WindowWidth);
+            var greeting = "Welcome to Euchre.NET";
+            System.Console.WriteLine('\n'+horiz_line);
+            System.Console.WriteLine(greeting);
+            System.Console.WriteLine(horiz_line+'\n');
         }
 
-        public Scenario(Deal deal, int seed)
+        private static void SelectMode(List<Mode> modes)
         {
-            Deal = deal;
-            Seed = seed;
-            ExecuteBiddingRound();
-        }
-
-        public Scenario(string encoded)
-            => Decode(encoded);
-
-        private void ExecuteBiddingRound()
-        {
-            DetermineBid();
-            TrumpifyDeck();
-            Encode();
-        }
-
-        private void DetermineBid()
-        {
-            var bidder = new Bidder(new Random(Seed));
-            bool pickup = false;
-            bool dealerPickup = false;
-
-            for (int i = 0; i <= 3; i++)
+            PrintOptions();
+            if (int.TryParse(Console.ReadLine(), out int x))
             {
-                int seat = (i + 1) % 4;
-                if (bidder.OrderUp(Deal.Hands[i], Deal.Upcard, seat, out Card? discard))
+                switch (x)
                 {
-                    Caller = seat;
-                    TrumpSuit = Deal.Upcard.Suit;
-                    pickup = true;
-                    if (seat == 0)
-                    {
-                        Downcard = (Card)discard;
-                        dealerPickup = true;
-                    }
+                    case 1:
 
-                    break;
-                }
-            }
-
-            if (!pickup)
-            {
-                for (int i = 0; i <= 3; i++)
-                {
-                    int seat = (i + 1) % 4;
-                    if (bidder.Declare(Deal.Hands[i], Deal.Upcard, seat, out char? trump))
-                    {
-                        TrumpSuit = (char)trump;
-                        Caller = seat;
                         break;
-                    }
+                    case 2:
+
+                        break;
+                    default:
+                        break;
                 }
             }
-
-            if (pickup && !dealerPickup)
-                bidder.SelectDiscard(Deal.Hands[3], Deal.Upcard, out Downcard);
-            else if (!pickup)
-                Downcard = Deal.Upcard;
+            else
+            {
+                Console.Write("Invalid Selection");
+                Main(null);
+            }
         }
 
-        private void TrumpifyDeck()
+        private static void PrintOptions()
         {
-            Downcard.Trumpify(TrumpSuit);
-            Upcard = Upcard.Copy().Trumpify(TrumpSuit);
-            Hands = new List<IEnumerable<Card>>();
-            foreach (var hand in Deal.Hands)
-                Hands.Append(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
+            Console.WriteLine("Deal a Hand");
+            Console.WriteLine("Analyze a Hand");
+            Console.Write("What would you like to do:  ");
         }
 
-        private void Encode()
+        private static List<Mode> DefineModes()
         {
-
+            var modes = new List<Mode>();
+            modes.Add(new Mode(1, "Deal a Hand"));
+            modes.Add(new Mode(2, "Analyze a Hand"));
+            return modes;
         }
+    }
 
-        private void Decode(string encoded)
+    public struct Mode
+    {
+        public int ID;
+        public string Name;
+
+        public Mode(int id, string name)
         {
-
+            ID = id;
+            Name = name;
         }
     }
 }

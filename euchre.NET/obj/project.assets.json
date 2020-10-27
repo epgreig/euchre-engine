@@ -694,11 +694,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ethangreig/Repos/euchre-engine/euchre.NET/euchre.NET.csproj",
+      "projectUniqueName": "/Users/ethangreig/Repos/euchre-buddy/euchre.NET/euchre.NET.csproj",
       "projectName": "euchre.NET",
-      "projectPath": "/Users/ethangreig/Repos/euchre-engine/euchre.NET/euchre.NET.csproj",
+      "projectPath": "/Users/ethangreig/Repos/euchre-buddy/euchre.NET/euchre.NET.csproj",
       "packagesPath": "/Users/ethangreig/.nuget/packages/",
-      "outputPath": "/Users/ethangreig/Repos/euchre-engine/euchre.NET/obj/",
+      "outputPath": "/Users/ethangreig/Repos/euchre-buddy/euchre.NET/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"

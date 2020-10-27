@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace euchre.NET
+namespace Euchre.NET
 {
     public static class Constants
     {

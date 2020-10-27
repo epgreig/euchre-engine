@@ -1,5 +1,6 @@
 ﻿using System;
-namespace euchre.NET
+
+namespace Euchre.NET
 {
     public struct Card
     {

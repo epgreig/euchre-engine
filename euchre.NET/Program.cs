@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic; // List
 
-namespace euchre.NET
+namespace Euchre.NET
 {
     class Program
     {
@@ -17,7 +17,7 @@ namespace euchre.NET
         private static void PrintGreeting()
         {
             var horiz_line = new String('#', Console.WindowWidth);
-            var greeting = "Welcome to EUCHRE.NET";
+            var greeting = "Welcome to Euchre.NET";
             System.Console.WriteLine('\n'+horiz_line);
             System.Console.WriteLine(greeting);
             System.Console.WriteLine(horiz_line+'\n');
