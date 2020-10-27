@@ -21,7 +21,10 @@ namespace euchre.NET
         public static Dictionary<char, char> C_TRUMP_DICT => new Dictionary<char, char>() { { 'C', 'T' }, { 'S', 'N' }, { 'H', 'A' }, { 'D', 'B' } };
 
         // Hand Scoring
-        public static Dictionary<string, float> THRESHOLD => new Dictionary<string, float>() { { "pass", 13.0f }, { "call", 17.5f } };
+        public static Dictionary<string, float> THRESHOLD
+            => new Dictionary<string, float>()
+            { { "pass", 13.0f },
+              { "call", 17.5f } };
         public static Dictionary<char, float> TRUMP_PTS
             => new Dictionary<char, float>()
             { { 'J', 9.50f },
@@ -34,13 +37,30 @@ namespace euchre.NET
         public static Dictionary<char, Dictionary<string, float>> ACE_PTS
             => new Dictionary<char, Dictionary<string, float>>()
             {
-                { 'N', new Dictionary<string, float>() { { "singleton", 1.75f }, { "paired", 1.5f }, { "more", 1.5f } } },
-                { 'G', new Dictionary<string, float>() { { "singleton", 2.75f }, { "paired", 1.75f }, { "more", 1.5f } } }
+                { 'N', new Dictionary<string, float>()
+                    { { "singleton", 1.75f },
+                      { "paired", 1.50f },
+                      { "more", 1.50f } } },
+                { 'G', new Dictionary<string, float>()
+                    { { "singleton", 2.75f },
+                      { "paired", 1.75f },
+                      { "more", 1.50f } } }
             };
         public static Dictionary<string, float> KING_PTS
-            => new Dictionary<string, float>() { { "singleton", 0.25f }, { "paired", 0.5f }, { "more", 0.25f } };
-        public static Dictionary<int, float> SUITED_BONUS => new Dictionary<int, float>() { { 2, 0.5f }, { 4, -2f } }; // 2-suited bonus is multiplied by number of trumps
-        public static Dictionary<int, float> SEAT_BONUS => new Dictionary<int, float>() { { 1, 0.5f }, { 2, 0.0f }, { 3, -1.5f },  { 0, 1.0f }, }; // 2-suited bonus is multiplied by number of trumps
+            => new Dictionary<string, float>()
+            { { "singleton", 0.25f },
+              { "paired", 0.50f },
+              { "more", 0.25f } };
+        public static Dictionary<int, float> SUITED_BONUS
+            => new Dictionary<int, float>()
+            { { 2,  0.5f },
+              { 4, -2.0f } }; // 2-suited bonus is multiplied by number of trumps
+        public static Dictionary<int, float> SEAT_BONUS
+            => new Dictionary<int, float>()
+            { { 1,  0.5f },
+              { 2,  0.0f },
+              { 3, -1.5f },
+              { 0,  1.0f } }; // 2-suited bonus is multiplied by number of trumps
 
         // Hand Scoring - First Round
         public static Dictionary<char, float> UPCARD_BONUS
@@ -61,8 +81,18 @@ namespace euchre.NET
               { '9', -1.50f } };
 
         // Hand Scoring - Second Round
-        public static Dictionary<int, float> NEXT_ADJ => new Dictionary<int, float>() { { 1, 3.0f }, { 2, -2.0f }, { 3, 1.5f }, { 0, 0.0f }, }; // 2-suited bonus is multiplied by number of trumps
-        public static Dictionary<int, float> GREEN_ADJ => new Dictionary<int, float>() { { 1, -1.5f }, { 2, 2.0f }, { 3, -0.75f }, { 0, 0.0f }, }; // 2-suited bonus is multiplied by number of trumps
+        public static Dictionary<int, float> NEXT_ADJ
+            => new Dictionary<int, float>()
+            { { 1,  3.0f },
+              { 2, -2.0f },
+              { 3,  1.5f },
+              { 0, -0.5f } };
+        public static Dictionary<int, float> GREEN_ADJ
+            => new Dictionary<int, float>()
+            { { 1, -2.00f },
+              { 2,  2.00f },
+              { 3, -0.75f },
+              { 0,  0.50f } };
         public static Dictionary<char, float> UPCARD_ADJ_FACTOR
             => new Dictionary<char, float>()
             { { 'J', 1.00f },
