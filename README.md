@@ -1,10 +1,7 @@
-# euchre-engine
+# Euchre.NET
 
 ## Purpose
-To build a Euchre AI which is able to play any hand of euchre. 
-
-## Details
-This engine will be buit using a Reinforced Learning algorithm. Given a standard (non-alone) Eucre hand of 5 cards and some details about who called Trump, the engine will be able to recommend which cards to play 
+To build a "euchre buddy": a program that will estimate the probability of your opponents holding any given card based on available information.
 
 ## Declaring Trump
 For now, the process of declaring trump will not be executed by this engine. What I have done is created a relatively simple points system to estimate how likely any bidding situation is to result in Bid or Pass. From this algorithm, I can randomly generate a Euchre deal, and apply the algorithm to each player until the result is a Trump declaration. Note that according to the ruleset I am using, "Stick the Dealer", the dealer must always select a trump suit in the second round of voting. Also note that this points algorithm will also be used to determine the discarded card if the dealer is "ordered up". So my algorithm maps each random deal to a Trump declaration, which in turn generates four realistic Hand Scenarios, one for each seat in the round.
