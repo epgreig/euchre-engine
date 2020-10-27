@@ -34,3 +34,6 @@
 .DS_Store
 __pycache__/
 .vs/
+bin
+obj
+packages
