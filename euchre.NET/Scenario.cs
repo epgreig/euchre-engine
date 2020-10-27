@@ -1,77 +1,112 @@
 ﻿using System;
-using System.Collections.Generic; // List
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Euchre.NET
+namespace euchre.NET
 {
-    class Program
+    public class Scenario
     {
-        static void Main(string[] args)
-        {
-            PrintGreeting();
-            var modes = DefineModes();
-            var mode = SelectMode(modes);
+        public Deal Deal;
+        public int Caller;
+        public char TrumpSuit;
+        public List<IEnumerable<Card>> Hands;
+        public Card Upcard;
+        public Card Downcard;
+        public readonly int Seed;
+        public string Encoded;
 
-            Main(null);
+        public Scenario()
+        {
+            Deal = new Deal();
+            Seed = (new Random()).Next();
+            ExecuteBiddingRound();
         }
 
-        private static void PrintGreeting()
+        public Scenario(Deal deal)
         {
-            var horiz_line = new String('#', Console.WindowWidth);
-            var greeting = "Welcome to Euchre.NET";
-            System.Console.WriteLine('\n'+horiz_line);
-            System.Console.WriteLine(greeting);
-            System.Console.WriteLine(horiz_line+'\n');
+            Deal = deal;
+            Seed = (new Random()).Next();
+            ExecuteBiddingRound();
         }
 
-        private static void SelectMode(List<Mode> modes)
+        public Scenario(Deal deal, int seed)
         {
-            PrintOptions();
-            if (int.TryParse(Console.ReadLine(), out int x))
+            Deal = deal;
+            Seed = seed;
+            ExecuteBiddingRound();
+        }
+
+        public Scenario(string encoded)
+            => Decode(encoded);
+
+        private void ExecuteBiddingRound()
+        {
+            DetermineBid();
+            TrumpifyDeck();
+            Encode();
+        }
+
+        private void DetermineBid()
+        {
+            var bidder = new Bidder(new Random(Seed));
+            bool pickup = false;
+            bool dealerPickup = false;
+
+            for (int i = 0; i <= 3; i++)
             {
-                switch (x)
+                int seat = (i + 1) % 4;
+                if (bidder.OrderUp(Deal.Hands[i], Deal.Upcard, seat, out Card? discard))
                 {
-                    case 1:
+                    Caller = seat;
+                    TrumpSuit = Deal.Upcard.Suit;
+                    pickup = true;
+                    if (seat == 0)
+                    {
+                        Downcard = (Card)discard;
+                        dealerPickup = true;
+                    }
 
-                        break;
-                    case 2:
-
-                        break;
-                    default:
-                        break;
+                    break;
                 }
             }
-            else
+
+            if (!pickup)
             {
-                Console.Write("Invalid Selection");
-                Main(null);
+                for (int i = 0; i <= 3; i++)
+                {
+                    int seat = (i + 1) % 4;
+                    if (bidder.Declare(Deal.Hands[i], Deal.Upcard, seat, out char? trump))
+                    {
+                        TrumpSuit = (char)trump;
+                        Caller = seat;
+                        break;
+                    }
+                }
             }
+
+            if (pickup && !dealerPickup)
+                bidder.SelectDiscard(Deal.Hands[3], Deal.Upcard, out Downcard);
+            else if (!pickup)
+                Downcard = Deal.Upcard;
         }
 
-        private static void PrintOptions()
+        private void TrumpifyDeck()
         {
-            Console.WriteLine("Deal a Hand");
-            Console.WriteLine("Analyze a Hand");
-            Console.Write("What would you like to do:  ");
+            Downcard.Trumpify(TrumpSuit);
+            Upcard = Upcard.Copy().Trumpify(TrumpSuit);
+            Hands = new List<IEnumerable<Card>>();
+            foreach (var hand in Deal.Hands)
+                Hands.Append(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
         }
 
-        private static List<Mode> DefineModes()
+        private void Encode()
         {
-            var modes = new List<Mode>();
-            modes.Add(new Mode(1, "Deal a Hand"));
-            modes.Add(new Mode(2, "Analyze a Hand"));
-            return modes;
+
         }
-    }
 
-    public struct Mode
-    {
-        public int ID;
-        public string Name;
-
-        public Mode(int id, string name)
+        private void Decode(string encoded)
         {
-            ID = id;
-            Name = name;
+
         }
     }
 }
