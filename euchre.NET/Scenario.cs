@@ -6,6 +6,7 @@ using System.Security.Permissions;
 
 namespace Euchre.NET
 {
+    [Serializable]
     public class Scenario : ISerializable
     {
         public Deal Deal;
@@ -106,11 +107,11 @@ namespace Euchre.NET
 
         private void TrumpifyDeck()
         {
-            Downcard.Trumpify(TrumpSuit);
-            Upcard = Upcard.Copy().Trumpify(TrumpSuit);
+            Downcard = Downcard.Trumpify(TrumpSuit);
+            Upcard = Deal.Upcard.Trumpify(TrumpSuit);
             Hands = new List<IEnumerable<Card>>();
             foreach (var hand in Deal.Hands)
-                Hands.Append(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
+                Hands.Add(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
         }
     }
 }

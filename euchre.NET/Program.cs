@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic; // List
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Euchre.NET
 {
     class Program
     {
         static void Main(string[] args)
-        {/*
+        {
             PrintGreeting();
             var modes = DefineModes();
-            var mode = SelectMode(modes);
-            */
+            SelectMode(modes);
         }
-        /*
+
         private static void PrintGreeting()
         {
             var horiz_line = new String('#', Console.WindowWidth);
@@ -30,7 +32,7 @@ namespace Euchre.NET
                 switch (x)
                 {
                     case 1:
-
+                        GenerateDeal();
                         break;
                     case 2:
 
@@ -60,7 +62,21 @@ namespace Euchre.NET
             modes.Add(new Mode(2, "Analyze a Hand"));
             return modes;
         }
-        */
+
+        private static void GenerateDeal()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream("SerializedScenarios.txt", FileMode.Create, FileAccess.Write, FileShare.None);
+            for (int i = 0; i < 3; i++)
+            {
+                var d = new Deal();
+                var s = new Scenario();
+                formatter.Serialize(stream, s);
+                formatter.Serialize(stream, d);
+            }
+
+            stream.Close();
+        }
     }
 
     public struct Mode

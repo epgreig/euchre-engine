@@ -48,7 +48,7 @@ namespace Euchre.NET
         {
             Hands = new List<IList<Card>>();
             for (int i = 0; i <= 3; i++)
-                Hands.Append(Deck.GetRange(5 * i, 5));
+                Hands.Add(Deck.GetRange(5 * i, 5));
 
             Upcard = Deck[20];
         }

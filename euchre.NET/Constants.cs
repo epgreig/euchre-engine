@@ -12,7 +12,7 @@ namespace Euchre.NET
         public static IList<char> SUITS => new List<char>() { 'H', 'D', 'S', 'C' };
         public static IList<char> RED_SUITS => new List<char>() { 'H', 'D' };
         public static List<Card> DECK
-            => (List<Card>)(from suit in SUITS from rank in RANKS select new Card(rank, suit));
+            => new List<Card>(from suit in SUITS from rank in RANKS select new Card(rank, suit));
 
         // Suit Mapping
         public static Dictionary<char, char> NEXT_DICT => new Dictionary<char, char>() { { 'H', 'D' }, { 'D', 'H' }, { 'S', 'C' }, { 'C', 'S' } };
