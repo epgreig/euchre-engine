@@ -35,7 +35,7 @@ namespace Euchre.NET
         public bool Declare(IList<Card> hand, Card upcard, int seat, out char? trump)
         {
             trump = null;
-            float bestScore = 0;
+            float bestScore = -10;
             char bestSuit = 'Z';
             foreach (char suit in Constants.SUITS)
             {
@@ -55,7 +55,7 @@ namespace Euchre.NET
             var interval = Constants.THRESHOLD["call"] - Constants.THRESHOLD["pass"];
             var threshold = Constants.THRESHOLD["pass"] + fraction * interval;
 
-            if (bestScore > threshold)
+            if ((seat == 0) || (bestScore > threshold))
             {
                 trump = bestSuit;
                 return true;

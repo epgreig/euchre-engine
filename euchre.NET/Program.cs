@@ -32,10 +32,10 @@ namespace Euchre.NET
                 switch (x)
                 {
                     case 1:
-                        GenerateDeal();
+                        GenerateDeals();
                         break;
                     case 2:
-
+                        ParseDeals();
                         break;
                     default:
                         break;
@@ -63,18 +63,24 @@ namespace Euchre.NET
             return modes;
         }
 
-        private static void GenerateDeal()
+        private static void GenerateDeals()
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream("SerializedScenarios.txt", FileMode.Create, FileAccess.Write, FileShare.None);
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 50; i++)
             {
-                var d = new Deal();
                 var s = new Scenario();
                 formatter.Serialize(stream, s);
-                formatter.Serialize(stream, d);
             }
 
+            stream.Close();
+        }
+
+        private static void ParseDeals()
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream("SerializedScenarios.txt", FileMode.Open, FileAccess.Read, FileShare.Read);
+            List<Scenario> s = (List<Scenario>)formatter.Deserialize(stream);
             stream.Close();
         }
     }

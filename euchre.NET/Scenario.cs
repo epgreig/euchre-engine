@@ -43,16 +43,18 @@ namespace Euchre.NET
         public Scenario(SerializationInfo info, StreamingContext context)
         {
             Caller = info.GetInt32("i");
-            Upcard = (Card)info.GetValue("upcard", Upcard.GetType());
             Hands = (List<IEnumerable<Card>>)info.GetValue("hands", Hands.GetType());
+            Upcard = (Card)info.GetValue("upcard", Upcard.GetType());
+            Downcard = (Card)info.GetValue("downcard", Downcard.GetType());
         }
 
         [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("caller", Caller);
-            info.AddValue("upcard", Upcard);
             info.AddValue("hands", Hands);
+            info.AddValue("upcard", Upcard);
+            info.AddValue("downcard", Downcard);
         }
 
         private void ExecuteBiddingRound()

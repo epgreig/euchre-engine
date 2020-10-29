@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace Euchre.NET
 {
+    [Serializable]
     public struct Card
     {
         public char Rank;
