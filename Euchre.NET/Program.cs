@@ -19,9 +19,10 @@ namespace Euchre.NET
         {
             var horiz_line = new String('#', Console.WindowWidth);
             var greeting = "Welcome to Euchre.NET";
-            System.Console.WriteLine('\n'+horiz_line);
-            System.Console.WriteLine(greeting);
-            System.Console.WriteLine(horiz_line+'\n');
+            Console.WriteLine('\n'+horiz_line);
+            Console.WriteLine(greeting);
+            Console.WriteLine(horiz_line+'\n');
+            Console.Write(typeof(string).Assembly.ImageRuntimeVersion);
         }
 
         private static void SelectMode(List<Mode> modes)
@@ -67,7 +68,7 @@ namespace Euchre.NET
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream("SerializedScenarios.txt", FileMode.Create, FileAccess.Write, FileShare.None);
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 50000; i++)
             {
                 var s = new Scenario();
                 formatter.Serialize(stream, s);

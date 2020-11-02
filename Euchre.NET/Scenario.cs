@@ -12,30 +12,16 @@ namespace Euchre.NET
         public Deal Deal;
         public int Caller;
         public char TrumpSuit;
-        public List<IEnumerable<Card>> Hands;
+        public List<List<Card>> Hands;
         public Card Upcard;
         public Card Downcard;
         public readonly int Seed;
         public string Encoded;
 
-        public Scenario()
+        public Scenario(Deal deal = null, int? seed = null)
         {
-            Deal = new Deal();
-            Seed = (new Random()).Next();
-            ExecuteBiddingRound();
-        }
-
-        public Scenario(Deal deal)
-        {
-            Deal = deal;
-            Seed = (new Random()).Next();
-            ExecuteBiddingRound();
-        }
-
-        public Scenario(Deal deal, int seed)
-        {
-            Deal = deal;
-            Seed = seed;
+            Deal = deal ?? new Deal();
+            Seed = seed ?? (new Random()).Next();
             ExecuteBiddingRound();
         }
 
@@ -43,7 +29,7 @@ namespace Euchre.NET
         public Scenario(SerializationInfo info, StreamingContext context)
         {
             Caller = info.GetInt32("i");
-            Hands = (List<IEnumerable<Card>>)info.GetValue("hands", Hands.GetType());
+            Hands = (List<List<Card>>)info.GetValue("hands", Hands.GetType());
             Upcard = (Card)info.GetValue("upcard", Upcard.GetType());
             Downcard = (Card)info.GetValue("downcard", Downcard.GetType());
         }
@@ -111,9 +97,9 @@ namespace Euchre.NET
         {
             Downcard = Downcard.Trumpify(TrumpSuit);
             Upcard = Deal.Upcard.Trumpify(TrumpSuit);
-            Hands = new List<IEnumerable<Card>>();
+            Hands = new List<List<Card>>();
             foreach (var hand in Deal.Hands)
-                Hands.Add(hand.Select(c => c.Copy().Trumpify(TrumpSuit)));
+                Hands.Add(hand.Select(c => c.Copy().Trumpify(TrumpSuit)).ToList());
         }
     }
 }

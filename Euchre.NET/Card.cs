@@ -6,14 +6,26 @@ namespace Euchre.NET
     [Serializable]
     public struct Card
     {
-        public char Rank;
-        public char Suit;
+        public char Rank { get; set; }
+        public char Suit { get; set; }
 
         public Card(char rank, char suit)
         {
             Rank = rank;
             Suit = suit;
         }
+
+        public override bool Equals(Object obj)
+            => obj is Card c && this == c;
+
+        public override int GetHashCode()
+            => Rank.GetHashCode() ^ Suit.GetHashCode();
+
+        public static bool operator ==(Card x, Card y)
+            => x.Rank == y.Rank && x.Suit == y.Suit;
+
+        public static bool operator !=(Card x, Card y)
+            => !(x == y);
     }
 
     public static class CardExtensions

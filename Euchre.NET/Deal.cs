@@ -9,24 +9,32 @@ namespace Euchre.NET
         public readonly int Seed;
         public List<Card> Deck;
         public IList<IList<Card>> Hands;
+        public readonly IList<IList<Card>> KnownCards;
         public Card Upcard;
 
-        public Deal()
+        public Deal(int? seed = null)
         {
-            Seed = (new Random()).Next();
-            ShuffleAndDeal();
+            Seed = seed ?? (new Random()).Next();
+            ShuffleAndDeal(false);
         }
 
-        public Deal(int seed)
+        public Deal(IList<IList<Card>> knownCards, Card upcard, int? seed = null)
         {
-            Seed = seed;
-            ShuffleAndDeal();
+            KnownCards = knownCards;
+            Upcard = upcard;
+            Seed = seed ?? (new Random()).Next();
+            ShuffleAndDeal(true);
         }
 
-        private void ShuffleAndDeal()
+        private void ShuffleAndDeal(bool someCardsKnown)
         {
             Deck = new List<Card>(Constants.DECK);
-            ShuffleDeck();
+
+            if (someCardsKnown)
+                ShuffleDeckWithKnownCards();
+            else
+                ShuffleDeck();
+
             DealHands();
         }
 
@@ -51,6 +59,11 @@ namespace Euchre.NET
                 Hands.Add(Deck.GetRange(5 * i, 5));
 
             Upcard = Deck[20];
+        }
+
+        private void ShuffleDeckWithKnownCards()
+        {
+            ShuffleDeckWithKnownCards();
         }
     }
 }
