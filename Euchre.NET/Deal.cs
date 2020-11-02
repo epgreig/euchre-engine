@@ -15,40 +15,35 @@ namespace Euchre.NET
         public Deal(int? seed = null)
         {
             Seed = seed ?? (new Random()).Next();
-            ShuffleAndDeal(false);
+            ShuffleAndDeal();
         }
 
-        public Deal(IList<IList<Card>> knownCards, Card upcard, int? seed = null)
+        public Deal(IList<IList<Card>> knownCards, Card upcard, Card? downcard = null)
         {
             KnownCards = knownCards;
             Upcard = upcard;
-            Seed = seed ?? (new Random()).Next();
-            ShuffleAndDeal(true);
+            Seed = (new Random()).Next();
+            ShuffleAndDealWithKnownCards();
         }
 
-        private void ShuffleAndDeal(bool someCardsKnown)
+        private void ShuffleAndDeal()
         {
             Deck = new List<Card>(Constants.DECK);
-
-            if (someCardsKnown)
-                ShuffleDeckWithKnownCards();
-            else
-                ShuffleDeck();
-
+            Shuffle(Deck);
             DealHands();
         }
 
-        private void ShuffleDeck()
+        private void Shuffle(IList<Card> deck)
         {
             var random = new Random(Seed);
-            int n = Deck.Count();
+            int n = deck.Count();
             while (n > 1)
             {
                 n--;
                 int k = random.Next(n + 1);
-                Card card = Deck[k];
-                Deck[k] = Deck[n];
-                Deck[n] = card;
+                Card card = deck[k];
+                deck[k] = deck[n];
+                deck[n] = card;
             }
         }
 
@@ -61,9 +56,24 @@ namespace Euchre.NET
             Upcard = Deck[20];
         }
 
-        private void ShuffleDeckWithKnownCards()
+        private void ShuffleAndDealWithKnownCards()
         {
-            ShuffleDeckWithKnownCards();
+            var allKnownCards = KnownCards.SelectMany(c => c).ToList();
+            allKnownCards.Add(Upcard);
+            var remainingDeck = new List<Card>(Constants.DECK).Where(c => !allKnownCards.Contains(c)).ToList();
+            Shuffle(remainingDeck);
+
+            Hands = new List<IList<Card>>(KnownCards);
+            foreach (var hand in Hands)
+            {
+                int count = hand.Count;
+                while (count < 5)
+                {
+                    count++;
+                    hand.Add(remainingDeck[0]);
+                    remainingDeck.RemoveAt(0);
+                }
+            }
         }
     }
 }
