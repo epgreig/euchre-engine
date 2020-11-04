@@ -12,6 +12,10 @@ namespace Euchre.NET
         private IEnumerable<Card> _secondSeatCards;
         private IEnumerable<Card> _thirdSeatCards;
         private IEnumerable<Card> _dealerCards;
+        private IEnumerable<char> _firstSeatVoids;
+        private IEnumerable<char> _secondSeatVoids;
+        private IEnumerable<char> _thirdSeatVoids;
+        private IEnumerable<char> _dealerVoids;
         private Card _upcard;
         private Card? _downcard;
         private int _perspective;

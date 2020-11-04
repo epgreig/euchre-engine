@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic; // List
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -100,8 +101,7 @@ namespace Euchre.NET
                 Console.Write("Invalid Hand");
 
             for (int i = 0; i < 5; i++)
-
-                                hand.Add(new Card(handString[2 * i], handString[2 * i + 1]));
+                hand.Add(new Card(handString[2 * i], handString[2 * i + 1]));
 
             Console.Write("Enter the upcard (two characters: ");
             var upcardString = Console.ReadLine();
@@ -122,6 +122,10 @@ namespace Euchre.NET
                 int index = (seat - 1) % 4;
                 cards[index] = hand;
                 var d = new Deal(cards, upcard);
+                foreach (var h in d.Hands)
+                    h.Select(c => c.GetString()).ToList().ForEach(Console.WriteLine);
+
+                Console.WriteLine(" ");
             }
         }
     }

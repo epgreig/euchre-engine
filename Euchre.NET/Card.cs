@@ -33,6 +33,9 @@ namespace Euchre.NET
         public static Card Copy(this Card card)
             => new Card(card.Rank, card.Suit);
 
+        public static string GetString(this Card card)
+            => new string(new char[] { card.Rank, card.Suit });
+
         public static Card Trumpify(this Card card, char trump)
         {
             if (card.Suit == trump)
