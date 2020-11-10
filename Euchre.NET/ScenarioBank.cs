@@ -7,7 +7,7 @@ namespace Euchre.NET
     public class ScenarioBank
     {
         private bool _paused;
-        private IList<Scenario> _relevantScenarios;
+        public IList<Scenario> _relevantScenarios;
         private IList<IList<Card>> _knownCards;
         private IList<IList<char>> _knownVoids;
         private Card _upcard;
@@ -42,39 +42,41 @@ namespace Euchre.NET
 
             _knownVoids = new List<IList<char>>(4);
             _knownCards = new List<IList<Card>>(4) { new List<Card>(5), new List<Card>(5), new List<Card>(5), new List<Card>(5) };
-            _knownCards[seat] = hand.Select(c => c.Trumpify(_trump)).ToList();
+            //_knownCards[seat] = hand.Select(c => c.Trumpify(_trump)).ToList();
+            _knownCards[seat] = hand;
 
-            _upcard = upcard.Trumpify(_trump);
-            _downcard = downcard?.Trumpify(_trump);
+            _upcard = upcard;
+            _downcard = downcard;
 
             GenerateScenarios();
         }
 
-        public RevealRound(int seatStart, List<Card> round)
+        public void RevealRound(int seatStart, List<Card> round)
         {
             var followSuit = round[0].Suit;
             for (int seat = 0; seat < 4; seat++)
             {
                 if (seat != _perspective)
                 {
-                    var seatCard = round[(seat - seatStart) % 4];
-                    _knownCards[seat].Add(seatCard.Trumpify(_trump));
-                    if (seat != seatStart)
-                        _knownVoids[seat].Add(seatCard.Suit)
-                }
+                    Card seatCard = round[(seat - seatStart) % 4];
+                    _knownCards[seat].Add(seatCard);
 
+                    if (seat != seatStart)
+                        _knownVoids[seat].Add(seatCard.Suit);
+                }
             }
 
+            GenerateScenarios();
         }
 
         private void GenerateScenarios()
         {
             while (!_paused && _relevantScenarios.Count() <= CAPACITY)
             {
-                //var deal = new Deal(...);
-                //var scenario = new Scenario(deal);
-                //_relevantScenarios.Add(scenario);
-                OnRelevantScenariosChanged(EventArgs.Empty);
+                var d = new Deal(_knownCards, _upcard);
+                var s = new Scenario(d);
+                _relevantScenarios.Add(s);
+                //OnRelevantScenariosChanged(EventArgs.Empty);
             }
         }
 

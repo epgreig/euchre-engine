@@ -103,29 +103,28 @@ namespace Euchre.NET
             for (int i = 0; i < 5; i++)
                 hand.Add(new Card(handString[2 * i], handString[2 * i + 1]));
 
-            Console.Write("Enter the upcard (two characters: ");
+            Console.Write("Enter the upcard (two characters): ");
             var upcardString = Console.ReadLine();
             if (upcardString.Length != 2)
                 Console.Write("Invalid Upcard");
 
             var upcard = new Card(upcardString[0], upcardString[1]);
 
+            Console.Write("Enter the caller (1, 2, 3, or 0): ");
+            var callerString = Console.ReadLine();
+            if (!int.TryParse(callerString, out int caller))
+                Console.Write("Invalid Caller");
+
+            Console.Write("Enter the trump suit (H, D, S, or C): ");
+            var trumpString = Console.ReadLine();
+            if (!char.TryParse(trumpString, out char trump))
+                Console.Write("Invalid Trump");
+
             for (int i = 0; i < 5; i++)
             {
-                var cards = new List<IList<Card>>(4)
-                {
-                    new List<Card>(5),
-                    new List<Card>(5),
-                    new List<Card>(5),
-                    new List<Card>(5)
-                };
-                int index = (seat - 1) % 4;
-                cards[index] = hand;
-                var d = new Deal(cards, upcard);
-                foreach (var h in d.Hands)
-                    h.Select(c => c.GetString()).ToList().ForEach(Console.WriteLine);
-
-                Console.WriteLine(" ");
+                var bank = new ScenarioBank(seat, hand, upcard, caller, trump);
+                foreach (Scenario scen in bank._relevantScenarios)
+                    Console.WriteLine(scen.Serialize());
             }
         }
     }
