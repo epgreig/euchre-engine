@@ -8,21 +8,15 @@ namespace Euchre.NET
     {
         private bool _paused;
         private IList<Scenario> _relevantScenarios;
-        private IList<Card> _firstSeatCards;
-        private IList<Card> _secondSeatCards;
-        private IList<Card> _thirdSeatCards;
-        private IList<Card> _dealerCards;
-        private IEnumerable<char> _firstSeatVoids;
-        private IEnumerable<char> _secondSeatVoids;
-        private IEnumerable<char> _thirdSeatVoids;
-        private IEnumerable<char> _dealerVoids;
+        private IList<IList<Card>> _knownCards;
+        private IList<IList<char>> _knownVoids;
         private Card _upcard;
         private Card? _downcard;
         private int _perspective;
         private int _caller;
         private char _trump;
 
-        private const int CAPACITY = 200;
+        private const int CAPACITY = 10;
 
         public event EventHandler RelevantScenariosChanged;
         public event EventHandler PauseChanged;
@@ -46,10 +40,10 @@ namespace Euchre.NET
             _caller = caller;
             _trump = trump;
 
-            _firstSeatCards = seat == 1 ? hand.Select(c => c.Trumpify(_trump)).ToList() : new List<Card>();
-            _secondSeatCards = seat == 2 ? hand.Select(c => c.Trumpify(_trump)).ToList() : new List<Card>();
-            _thirdSeatCards = seat == 3 ? hand.Select(c => c.Trumpify(_trump)).ToList() : new List<Card>();
-            _dealerCards = seat == 0 ? hand.Select(c => c.Trumpify(_trump)).ToList() : new List<Card>();
+            _knownVoids = new List<IList<char>>(4);
+            _knownCards = new List<IList<Card>>(4) { new List<Card>(5), new List<Card>(5), new List<Card>(5), new List<Card>(5) };
+            _knownCards[seat] = hand.Select(c => c.Trumpify(_trump)).ToList();
+
             _upcard = upcard.Trumpify(_trump);
             _downcard = downcard?.Trumpify(_trump);
 
@@ -58,10 +52,19 @@ namespace Euchre.NET
 
         public RevealRound(int seatStart, List<Card> round)
         {
-            _firstSeatCards.Add(round[Math.Abs(seatStart - 1)]); 1 -> 0, 2 -> 3, 3 -> 2, 0 -> 1
-            _secondSeatCards.Add(round[Math.Abs(seatStart - 2)]); 1 -> 1, 2 -> 0, 3 -> 3, 0 -> 2
-            _thirdSeatCards.Add(round[Math.Abs(seatStart - 3)]); 1 -> 2, 2 -> 1, 3 -> 0, 0 -> 3
-            _dealerCards.Add(round[Math.Abs(seatStart - 1)]); 1 -> 3, 2 -> 2, 3 -> 1, 0 -> 0
+            var followSuit = round[0].Suit;
+            for (int seat = 0; seat < 4; seat++)
+            {
+                if (seat != _perspective)
+                {
+                    var seatCard = round[(seat - seatStart) % 4];
+                    _knownCards[seat].Add(seatCard.Trumpify(_trump));
+                    if (seat != seatStart)
+                        _knownVoids[seat].Add(seatCard.Suit)
+                }
+
+            }
+
         }
 
         private void GenerateScenarios()

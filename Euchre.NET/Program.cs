@@ -112,12 +112,12 @@ namespace Euchre.NET
 
             for (int i = 0; i < 5; i++)
             {
-                var cards = new List<IList<Card>>()
+                var cards = new List<IList<Card>>(4)
                 {
-                    new List<Card>(),
-                    new List<Card>(),
-                    new List<Card>(),
-                    new List<Card>()
+                    new List<Card>(5),
+                    new List<Card>(5),
+                    new List<Card>(5),
+                    new List<Card>(5)
                 };
                 int index = (seat - 1) % 4;
                 cards[index] = hand;

@@ -55,10 +55,9 @@ namespace Euchre.NET
             bool pickup = false;
             bool dealerPickup = false;
 
-            for (int i = 0; i <= 3; i++)
+            foreach (int seat in new[] { 1, 2, 3, 0 })
             {
-                int seat = (i + 1) % 4;
-                if (bidder.OrderUp(Deal.Hands[i], Deal.Upcard, seat, out Card? discard))
+                if (bidder.OrderUp(Deal.Hands[seat], Deal.Upcard, seat, out Card? discard))
                 {
                     Caller = seat;
                     TrumpSuit = Deal.Upcard.Suit;
@@ -75,10 +74,9 @@ namespace Euchre.NET
 
             if (!pickup)
             {
-                for (int i = 0; i <= 3; i++)
+                foreach (int seat in new[] { 1, 2, 3, 0 })
                 {
-                    int seat = (i + 1) % 4;
-                    if (bidder.Declare(Deal.Hands[i], Deal.Upcard, seat, out char? trump))
+                    if (bidder.Declare(Deal.Hands[seat], Deal.Upcard, seat, out char? trump))
                     {
                         TrumpSuit = (char)trump;
                         Caller = seat;
@@ -88,7 +86,7 @@ namespace Euchre.NET
             }
 
             if (pickup && !dealerPickup)
-                bidder.SelectDiscard(Deal.Hands[3], Deal.Upcard, out Downcard);
+                bidder.SelectDiscard(Deal.Hands[0], Deal.Upcard, out Downcard);
             else if (!pickup)
                 Downcard = Deal.Upcard;
         }
@@ -97,7 +95,7 @@ namespace Euchre.NET
         {
             Downcard = Downcard.Trumpify(TrumpSuit);
             Upcard = Deal.Upcard.Trumpify(TrumpSuit);
-            Hands = new List<List<Card>>();
+            Hands = new List<List<Card>>(4);
             foreach (var hand in Deal.Hands)
                 Hands.Add(hand.Select(c => c.Copy().Trumpify(TrumpSuit)).ToList());
         }

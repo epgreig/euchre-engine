@@ -49,7 +49,7 @@ namespace Euchre.NET
 
         private void DealHands()
         {
-            Hands = new List<IList<Card>>();
+            Hands = new List<IList<Card>>(4);
             for (int i = 0; i <= 3; i++)
                 Hands.Add(Deck.GetRange(5 * i, 5));
 
