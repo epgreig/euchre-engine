@@ -68,5 +68,32 @@ namespace Euchre.NET
 
             return card;
         }
+
+        public static Card Detrumpify(this Card card, char trump)
+        {
+            if (card.Suit == 'T')
+            {
+                card.Suit = trump;
+                if (card.Rank == 'L')
+                {
+                    card.Rank = 'J';
+                    card.Suit = Constants.NEXT_DICT[trump];
+                }
+            }
+            else if (card.Suit == 'N')
+            {
+                card.Suit = Constants.NEXT_DICT[trump];
+            }
+            else
+            {
+                var DEGREEN_DICT = Constants.RED_SUITS.Contains(trump)
+                    ? Constants.RED_DETRUMP_DICT
+                    : Constants.BLACK_DETRUMP_DICT;
+
+                card.Suit = DEGREEN_DICT[card.Suit];
+            }
+
+            return card;
+        }
     }
 }

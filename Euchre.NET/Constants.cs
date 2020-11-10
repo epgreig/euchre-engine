@@ -18,6 +18,8 @@ namespace Euchre.NET
         public static Dictionary<char, char> NEXT_DICT => new Dictionary<char, char>() { { 'H', 'D' }, { 'D', 'H' }, { 'S', 'C' }, { 'C', 'S' } };
         public static Dictionary<char, char> RED_TRUMP_DICT => new Dictionary<char, char>() { { 'S', 'A' }, { 'C', 'B' } };
         public static Dictionary<char, char> BLACK_TRUMP_DICT => new Dictionary<char, char>() { { 'H', 'A' }, { 'D', 'B' } };
+        public static Dictionary<char, char> RED_DETRUMP_DICT => new Dictionary<char, char>() { { 'A', 'S' }, { 'B', 'C' } };
+        public static Dictionary<char, char> BLACK_DETRUMP_DICT => new Dictionary<char, char>() { { 'A', 'H' }, { 'B', 'D' } };
 
         // Hand Scoring
         public static Dictionary<string, float> THRESHOLD => new Dictionary<string, float>()
