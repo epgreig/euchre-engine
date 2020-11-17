@@ -12,8 +12,7 @@ namespace Euchre.NET
         static void Main(string[] args)
         {
             PrintGreeting();
-            var modes = DefineModes();
-            SelectMode(modes);
+            SelectMode();
         }
 
         private static void PrintGreeting()
@@ -23,23 +22,18 @@ namespace Euchre.NET
             Console.WriteLine('\n' + horiz_line);
             Console.WriteLine(greeting);
             Console.WriteLine(horiz_line + '\n');
-            Console.Write(typeof(string).Assembly.ImageRuntimeVersion);
+            Console.WriteLine(typeof(string).Assembly.ImageRuntimeVersion);
         }
 
-        private static void SelectMode(List<Mode> modes)
+        private static void SelectMode()
         {
-            PrintOptions();
+            Console.WriteLine("1. Generate Scenarios");
+            Console.Write("What would you like to do:  ");
             if (int.TryParse(Console.ReadLine(), out int x))
             {
                 switch (x)
                 {
                     case 1:
-                        GenerateDeals();
-                        break;
-                    case 2:
-                        ParseDeals();
-                        break;
-                    case 3:
                         EnterAHand();
                         break;
                     default:
@@ -50,21 +44,6 @@ namespace Euchre.NET
             {
                 Console.Write("Invalid Selection");
             }
-        }
-
-        private static void PrintOptions()
-        {
-            Console.WriteLine("Deal a Hand");
-            Console.WriteLine("Analyze a Hand");
-            Console.Write("What would you like to do:  ");
-        }
-
-        private static List<Mode> DefineModes()
-        {
-            var modes = new List<Mode>();
-            modes.Add(new Mode(1, "Deal a Hand"));
-            modes.Add(new Mode(2, "Analyze a Hand"));
-            return modes;
         }
 
         private static void GenerateDeals()
@@ -120,12 +99,12 @@ namespace Euchre.NET
             if (!char.TryParse(trumpString, out char trump))
                 Console.Write("Invalid Trump");
 
-            for (int i = 0; i < 5; i++)
-            {
-                var bank = new ScenarioBank(seat, hand, upcard, caller, trump);
-                foreach (Scenario scen in bank._relevantScenarios)
-                    Console.WriteLine(scen.Serialize());
-            }
+            var bank = new ScenarioBank(seat, hand, upcard, caller, trump);
+            foreach (Scenario scen in bank._relevantScenarios)
+                Console.WriteLine(scen.Serialize());
+
+            PrintGreeting();
+            SelectMode();
         }
     }
 
