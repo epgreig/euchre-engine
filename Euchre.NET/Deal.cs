@@ -63,7 +63,7 @@ namespace Euchre.NET
             var remainingDeck = new List<Card>(Constants.DECK).Where(c => !allKnownCards.Contains(c)).ToList();
             Shuffle(remainingDeck);
 
-            Hands = new List<IList<Card>>(KnownCards);
+            Hands = new List<IList<Card>>() { KnownCards[0].ToList(), KnownCards[1].ToList(), KnownCards[2].ToList(), KnownCards[3].ToList() };
             foreach (var hand in Hands)
             {
                 int count = hand.Count;
