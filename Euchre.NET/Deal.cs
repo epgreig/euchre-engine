@@ -18,11 +18,11 @@ namespace Euchre.NET
             ShuffleAndDeal();
         }
 
-        public Deal(IList<IList<Card>> knownCards, Card upcard, Card? downcard = null)
+        public Deal(IList<IList<Card>> knownCards, Card upcard, int seed, Card? downcard = null)
         {
             KnownCards = knownCards;
             Upcard = upcard;
-            Seed = (new Random()).Next();
+            Seed = seed;
             ShuffleAndDealWithKnownCards();
         }
 

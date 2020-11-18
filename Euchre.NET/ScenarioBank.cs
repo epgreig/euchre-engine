@@ -7,6 +7,7 @@ namespace Euchre.NET
     public class ScenarioBank
     {
         private bool _paused;
+        private Random _random;
         public IList<Scenario> _relevantScenarios;
         private IList<IList<Card>> _knownCards;
         private IList<IList<char>> _knownVoids;
@@ -16,7 +17,7 @@ namespace Euchre.NET
         private int _caller;
         private char _trump;
 
-        private const int CAPACITY = 10;
+        private const int CAPACITY = 8;
 
         public event EventHandler RelevantScenariosChanged;
         public event EventHandler PauseChanged;
@@ -34,6 +35,7 @@ namespace Euchre.NET
         public ScenarioBank(int seat, List<Card> hand, Card upcard, int caller, char trump, Card? downcard = null)
         {
             _paused = false;
+            _random = new Random();
             _relevantScenarios = new List<Scenario>();
 
             _perspective = seat;
@@ -73,7 +75,7 @@ namespace Euchre.NET
         {
             while (!_paused && _relevantScenarios.Count() <= CAPACITY)
             {
-                var d = new Deal(_knownCards, _upcard);
+                var d = new Deal(_knownCards, _upcard, _random.Next());
                 var s = new Scenario(d);
                 _relevantScenarios.Add(s);
                 //OnRelevantScenariosChanged(EventArgs.Empty);
