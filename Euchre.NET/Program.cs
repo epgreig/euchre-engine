@@ -103,6 +103,17 @@ namespace Euchre.NET
             foreach (Scenario scen in bank._relevantScenarios)
                 Console.WriteLine(scen.Serialize());
 
+            var round = new List<Card>();
+            Console.Write("Enter the first round of cards (eight characters): ");
+            var roundString = Console.ReadLine();
+
+            for (int i = 0; i < 4; i++)
+                round.Add(new Card(roundString[2 * i], roundString[2 * i + 1]));
+
+            bank.RevealRound(1, round);
+            foreach (Scenario scen in bank._relevantScenarios)
+                Console.WriteLine(scen.Serialize());
+
             PrintGreeting();
             SelectMode();
         }

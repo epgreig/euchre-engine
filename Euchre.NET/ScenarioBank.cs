@@ -17,7 +17,7 @@ namespace Euchre.NET
         private int _caller;
         private char _trump;
 
-        private const int CAPACITY = 8;
+        private const int CAPACITY = 16;
 
         public event EventHandler RelevantScenariosChanged;
         public event EventHandler PauseChanged;
@@ -42,7 +42,7 @@ namespace Euchre.NET
             _caller = caller;
             _trump = trump;
 
-            _knownVoids = new List<IList<char>>(4);
+            _knownVoids = new List<IList<char>>(4) { new List<char>(3), new List<char>(3), new List<char>(3), new List<char>(3) };
             _knownCards = new List<IList<Card>>(4) { new List<Card>(5), new List<Card>(5), new List<Card>(5), new List<Card>(5) };
             //_knownCards[seat] = hand.Select(c => c.Trumpify(_trump)).ToList();
             _knownCards[seat] = hand;
@@ -60,7 +60,7 @@ namespace Euchre.NET
             {
                 if (seat != _perspective)
                 {
-                    Card seatCard = round[(seat - seatStart) % 4];
+                    Card seatCard = round[(((seat - seatStart) % 4) + 4) % 4];
                     _knownCards[seat].Add(seatCard);
 
                     if (seat != seatStart)
@@ -73,11 +73,13 @@ namespace Euchre.NET
 
         private void GenerateScenarios()
         {
-            while (!_paused && _relevantScenarios.Count() <= CAPACITY)
+            int attempts = 0;
+            while (!_paused && attempts < 10000 && _relevantScenarios.Count() <= CAPACITY)
             {
                 var d = new Deal(_knownCards, _upcard, _random.Next());
                 var s = new Scenario(d);
-                _relevantScenarios.Add(s);
+                if (s.Caller == _caller && s.TrumpSuit == _trump)
+                    _relevantScenarios.Add(s);
                 //OnRelevantScenariosChanged(EventArgs.Empty);
             }
         }
