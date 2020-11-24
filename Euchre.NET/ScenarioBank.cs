@@ -76,7 +76,7 @@ namespace Euchre.NET
             int attempts = 0;
             while (!_paused && attempts < 10000 && _relevantScenarios.Count() <= CAPACITY)
             {
-                var d = new Deal(_knownCards, _upcard, _random.Next());
+                var d = new Deal(_knownCards, _knownVoids, _upcard, _random.Next());
                 var s = new Scenario(d);
                 if (s.Caller == _caller && s.TrumpSuit == _trump)
                     _relevantScenarios.Add(s);
