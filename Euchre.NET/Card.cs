@@ -95,5 +95,13 @@ namespace Euchre.NET
 
             return card;
         }
+
+        public static char EffectiveSuit(this Card card, char trump)
+        {
+            if (card.Rank == 'J' && card.Suit == Constants.NEXT_DICT[trump])
+                return trump;
+            else
+                return card.Suit;
+        }
     }
 }

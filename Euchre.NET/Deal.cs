@@ -10,8 +10,10 @@ namespace Euchre.NET
         public List<Card> Deck;
         public IList<IList<Card>> Hands;
         public readonly IList<IList<Card>> KnownCards;
-        public readonly IList<IList<char>> KnownVoids;
         public Card Upcard;
+
+        private readonly char _trump;
+        private readonly IList<IList<char>> _knownVoids;
 
         public Deal(int? seed = null)
         {
@@ -19,10 +21,11 @@ namespace Euchre.NET
             ShuffleAndDeal();
         }
 
-        public Deal(IList<IList<Card>> knownCards, IList<IList<char>> knownVoids, Card upcard, int seed, Card? downcard = null)
+        public Deal(IList<IList<Card>> knownCards, Card upcard, IList<IList<char>> knownVoids, char trump, int seed, Card? downcard = null)
         {
             KnownCards = knownCards;
-            KnownVoids = knownVoids ?? new List<IList<char>>(4);
+            _trump = trump;
+            _knownVoids = knownVoids ?? new List<IList<char>>(4);
             Upcard = upcard;
             Seed = seed;
             ShuffleAndDealWithKnownCards();
@@ -72,16 +75,19 @@ namespace Euchre.NET
                 int count = hand.Count;
                 for (int j = 0; j < remainingDeck.Count; j++)
                 {
-                    while (count < 5)
+                    if (count == 5)
+                        break;
+
+                    var a = _knownVoids[i];
+                    var b = remainingDeck[j].EffectiveSuit(_trump);
+                    var c = a.Contains(b);
+                    if (!_knownVoids[i].Contains(remainingDeck[j].EffectiveSuit(_trump)))
                     {
-                        if (!KnownVoids[i].Contains(remainingDeck[j].Suit))
-                        {
-                            hand.Add(remainingDeck[j]);
-                            remainingDeck.RemoveAt(j);
-                            j--;
-                            count++;
-                        }
-                    } 
+                        hand.Add(remainingDeck[j]);
+                        remainingDeck.RemoveAt(j);
+                        j--;
+                        count++;
+                    }
                 }
             }
         }

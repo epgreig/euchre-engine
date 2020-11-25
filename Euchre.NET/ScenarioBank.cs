@@ -73,10 +73,11 @@ namespace Euchre.NET
 
         private void GenerateScenarios()
         {
+            _knownVoids = new List<IList<char>>() { new List<char>() { 'H' }, new List<char>() { 'D' }, new List<char>() { 'S' }, new List<char>() { 'C' } };
             int attempts = 0;
             while (!_paused && attempts < 10000 && _relevantScenarios.Count() <= CAPACITY)
             {
-                var d = new Deal(_knownCards, _knownVoids, _upcard, _random.Next());
+                var d = new Deal(_knownCards, _upcard, _knownVoids, _trump, _random.Next());
                 var s = new Scenario(d);
                 if (s.Caller == _caller && s.TrumpSuit == _trump)
                     _relevantScenarios.Add(s);
