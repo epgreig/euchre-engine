@@ -69,7 +69,27 @@ namespace Euchre.NET
             Shuffle(remainingDeck);
 
             Hands = new List<IList<Card>>() { KnownCards[0].ToList(), KnownCards[1].ToList(), KnownCards[2].ToList(), KnownCards[3].ToList() };
-            for (int i = 0; i < Hands.Count; i++)
+
+            // fill dealer hand, allowing 1 buffer card from void suits
+            var dealerHand = Hands[0];
+            int dealerCount = dealerHand.Count;
+            var voidCardsAdded = 0;
+            for (int j = 0; j < remainingDeck.Count; j++)
+            {
+                if (dealerCount == 5)
+                    break;
+
+                if (!_knownVoids[0].Contains(remainingDeck[j].EffectiveSuit(_trump)) || (voidCardsAdded++ == 0))
+                {
+                    dealerHand.Add(remainingDeck[j]);
+                    remainingDeck.RemoveAt(j);
+                    j--;
+                    dealerCount++;
+                }
+            }
+
+            // fill remaining hands
+            for (int i = 1; i < Hands.Count; i++)
             {
                 var hand = Hands[i];
                 int count = hand.Count;
@@ -78,9 +98,6 @@ namespace Euchre.NET
                     if (count == 5)
                         break;
 
-                    var a = _knownVoids[i];
-                    var b = remainingDeck[j].EffectiveSuit(_trump);
-                    var c = a.Contains(b);
                     if (!_knownVoids[i].Contains(remainingDeck[j].EffectiveSuit(_trump)))
                     {
                         hand.Add(remainingDeck[j]);
