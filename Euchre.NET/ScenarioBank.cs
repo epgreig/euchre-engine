@@ -79,7 +79,7 @@ namespace Euchre.NET
             {
                 var d = new Deal(_knownCards, _upcard, _knownVoids, _trump, _random.Next());
                 var s = new Scenario(d);
-                if (s.Caller == _caller && s.TrumpSuit == _trump)
+                if (s.Caller == _caller && s.TrumpSuit == _trump && s.DealerHasVoids(_knownCards[0], _knownVoids[0]))
                     _relevantScenarios.Add(s);
                 //OnRelevantScenariosChanged(EventArgs.Empty);
             }

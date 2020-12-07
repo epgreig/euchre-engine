@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Security.Permissions;
 using System.Text;
 
 namespace Euchre.NET
 {
     [Serializable]
-    public class Scenario : ISerializable
+    public class Scenario
     {
         public Deal Deal;
         public int Caller;
@@ -102,22 +101,16 @@ namespace Euchre.NET
                 Hands.Add(hand.Select(c => c.Copy().Trumpify(TrumpSuit)).ToList());
         }
 
-        // Custom Serialization
-        public Scenario(SerializationInfo info, StreamingContext context)
+        public bool DealerHasVoids(IList<Card> knownCards, IList<char> voids)
         {
-            Caller = info.GetInt32("i");
-            Hands = (List<List<Card>>)info.GetValue("hands", Hands.GetType());
-            Upcard = (Card)info.GetValue("upcard", Upcard.GetType());
-            Downcard = (Card)info.GetValue("downcard", Downcard.GetType());
-        }
+            var dealerSuits = new List<char>();
+            foreach (var card in Deal.Hands[0])
+            {
+                if (!knownCards.Contains(card))
+                    dealerSuits.Add(card.Suit);
+            }
 
-        [SecurityPermissionAttribute(SecurityAction.Demand, SerializationFormatter = true)]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("caller", Caller);
-            info.AddValue("hands", Hands);
-            info.AddValue("upcard", Upcard);
-            info.AddValue("downcard", Downcard);
+            return !voids.Any(s => dealerSuits.Contains(s));
         }
     }
 }
