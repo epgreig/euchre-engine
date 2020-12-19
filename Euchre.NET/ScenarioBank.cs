@@ -73,7 +73,7 @@ namespace Euchre.NET
 
         private void GenerateScenarios()
         {
-            _knownVoids = new List<IList<char>>() { new List<char>() { 'H', 'S' }, new List<char>(), new List<char>() { 'C', 'S' }, new List<char>() { 'C', 'D' } };
+            _knownVoids = new List<IList<char>>() { new List<char>() { 'H', 'S' }, new List<char>(), new List<char>() { 'S' }, new List<char>() { 'C', 'D' } };
             int attempts = 0;
             while (!_paused && attempts < 10000 && _relevantScenarios.Count() <= CAPACITY)
             {

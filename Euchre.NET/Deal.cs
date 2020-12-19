@@ -6,18 +6,19 @@ namespace Euchre.NET
 {
     public class Deal
     {
-        public readonly int Seed;
+        public readonly Random RNG;
         public List<Card> Deck;
         public IList<IList<Card>> Hands;
         public readonly IList<IList<Card>> KnownCards;
         public Card Upcard;
+        public int Attempts = 0;
 
         private readonly char _trump;
         private readonly IList<IList<char>> _knownVoids;
 
         public Deal(int? seed = null)
         {
-            Seed = seed ?? (new Random()).Next();
+            RNG = seed != null ? new Random((int)seed) : new Random();
             ShuffleAndDeal();
         }
 
@@ -27,7 +28,7 @@ namespace Euchre.NET
             _trump = trump;
             _knownVoids = knownVoids ?? new List<IList<char>>(4);
             Upcard = upcard;
-            Seed = seed;
+            RNG = new Random((int)seed);
             ShuffleAndDealWithKnownCards();
         }
 
@@ -40,12 +41,11 @@ namespace Euchre.NET
 
         private void Shuffle(IList<Card> deck)
         {
-            var random = new Random(Seed);
             int n = deck.Count();
             while (n > 1)
             {
                 n--;
-                int k = random.Next(n + 1);
+                int k = RNG.Next(n + 1);
                 Card card = deck[k];
                 deck[k] = deck[n];
                 deck[n] = card;
@@ -106,6 +106,18 @@ namespace Euchre.NET
                         count++;
                     }
                 }
+
+                if (count != 5)
+                    break;
+            }
+
+            if (Hands.Any(h => h.Count != 5))
+            {
+                if (Attempts > 1000)
+                    throw new Exception("Could not find an appropriate deal");
+
+                Attempts++;
+                ShuffleAndDealWithKnownCards();
             }
         }
     }
