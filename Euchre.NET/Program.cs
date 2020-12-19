@@ -36,6 +36,9 @@ namespace Euchre.NET
                     case 1:
                         EnterAHand();
                         break;
+                    case 2:
+                        EnterDefaultHand();
+                        break;
                     default:
                         break;
                 }
@@ -98,6 +101,40 @@ namespace Euchre.NET
             var trumpString = Console.ReadLine();
             if (!char.TryParse(trumpString, out char trump))
                 Console.Write("Invalid Trump");
+
+            var bank = new ScenarioBank(seat, hand, upcard, caller, trump);
+            foreach (Scenario scen in bank._relevantScenarios)
+                Console.WriteLine(scen.Serialize());
+
+            var round = new List<Card>();
+            Console.Write("Enter the first round of cards (eight characters): ");
+            var roundString = Console.ReadLine();
+
+            for (int i = 0; i < 4; i++)
+                round.Add(new Card(roundString[2 * i], roundString[2 * i + 1]));
+
+            bank.RevealRound(1, round);
+            foreach (Scenario scen in bank._relevantScenarios)
+                Console.WriteLine(scen.Serialize());
+
+            PrintGreeting();
+            SelectMode();
+        }
+
+        private static void EnterDefaultHand()
+        {
+            int seat = 1;
+            var hand = new List<Card>()
+            {
+                new Card('A','S'),
+                new Card('K','S'),
+                new Card('Q','S'),
+                new Card('J','S'),
+                new Card('T','S'),
+            };
+            var upcard = new Card('K','D');
+            int caller = 0;
+            char trump = 'D';
 
             var bank = new ScenarioBank(seat, hand, upcard, caller, trump);
             foreach (Scenario scen in bank._relevantScenarios)
